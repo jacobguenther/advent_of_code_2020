@@ -25,17 +25,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::*;
 
-pub struct Challenge {
-	_dummy: i32,
-}
+pub struct Challenge {}
 impl ChallengeT for Challenge {
-	fn day() -> i32 {
+	type Output1 = usize;
+	type Output2 = usize;
+
+	fn day() -> u8 {
 		1
 	}
-	fn part_1() -> i32 {
+	fn part_1() -> usize {
+		let input = include_str!("../inputs/day_1.txt");
+		let lines = get_lines_from_content(input);
 		0
 	}
-	fn part_2() -> i32 {
+	fn part_2() -> usize {
+		let input = include_str!("../inputs/day_1.txt");
+		let lines = get_lines_from_content(input);
 		0
 	}
 }
@@ -46,12 +51,12 @@ mod tests {
 	use super::Challenge;
 
 	#[test]
-	fn part_1_test() {
+	fn part_1() {
 		let res = Challenge::part_1();
 		assert_eq!(res, 0);
 	}
 	#[test]
-	fn part_2_test() {
+	fn part_2() {
 		let res = Challenge::part_2();
 		assert_eq!(res, 0);
 	}

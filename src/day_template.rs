@@ -25,10 +25,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::*;
 
-pub struct Challenge {
-	_dummy: i32,
+pub struct Challenge {}
+impl ChallengeT for Challenge {
+	type Output1 = usize;
+	type Output2 = usize;
+
+	fn day() -> u8 {
+		1
+	}
+	fn part_1() -> usize {
+		let input = include_str!("../inputs/day_1.txt");
+		0
+	}
+	fn part_2() -> usize {
+		let input = include_str!("../inputs/day_1.txt");
+		0
+	}
 }
-impl ChallengeT for Challenge {}
 
 #[cfg(test)]
 mod tests {
