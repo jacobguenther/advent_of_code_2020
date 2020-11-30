@@ -1,4 +1,4 @@
-// File: common.rs
+// File: common/mod.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -23,11 +23,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use std::fs;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+pub mod vec2;
+pub mod grid;
+
+use std::fmt;
 
 pub trait ChallengeT {
+	type Output1: fmt::Display;
+	type Output2: fmt::Display;
+
 	fn print_result() {
 		println!("{}", Self::result_string());
 	}
@@ -35,59 +39,26 @@ pub trait ChallengeT {
 		format!("Day {}\n  part 1: {}\n  part 2: {}", Self::day(), Self::part_1(), Self::part_2())
 	}
 
-	fn day() -> i32;
-	fn part_1() -> i32;
-	fn part_2() -> i32;
+	fn day() -> u8;
+	fn part_1() -> Self::Output1;
+	fn part_2() -> Self::Output2;
 }
 
-fn file_path(file_name: &str) -> String {
-	format!("inputs/{}", file_name)
-}
-pub fn read_file(file_name: &str) -> String {
-	fs::read_to_string(&file_path(file_name))
-		.expect(
-			&format!("Something went wrong reading the file: {}", file_name)
-		)
-}
-
-pub fn get_lines_from_file(file_name: &str) -> Vec<String> {
-	let file = File::open(&file_path(file_name))
-		.expect(
-			&format!("Something went wrong opening the file: {}", file_name)
-		);
-	BufReader::new(file)
+pub fn get_lines_from_content(input: &str) -> Vec<String> {
+	input.to_owned()
 		.lines()
-		.enumerate()
-		.map(|(index, line)| {
-			match line {
-				Ok(text) => text,
-				Err(err) => panic!("Failed while reading the file {} at line {} with error: {}", file_name, index, err),
-			}
-		})
+		.map(|line| line.to_owned())
 		.collect()
 }
 
 #[cfg(test)]
 mod tests {
-	use super::{
-		file_path,
-		read_file,
-		get_lines_from_file,
-	};
+	use super::*;
 
 	#[test]
-	fn file_path_test() {
-		let path = file_path("test.txt");
-		assert_eq!(&path, "inputs/test.txt");
-	}
-	#[test]
-	fn read_file_test() {
-		let contents = read_file("test.txt");
-		assert_eq!(&contents, "Hello World!\nWe come in peace");
-	}
-	#[test]
 	fn get_lines_from_file_test() {
-		let lines = get_lines_from_file("test.txt");
+		let content = include_str!("../../inputs/test.txt");
+		let lines = get_lines_from_content(content);
 		assert_eq!(lines.len(), 2);
 		assert_eq!(lines[0], "Hello World!");
 		assert_eq!(lines[1], "We come in peace");
