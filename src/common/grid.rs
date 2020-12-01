@@ -25,19 +25,60 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::vec2::*;
 
+pub trait GridT<T> {
+	fn new(x: usize, y: usize, default: &T) -> Self;
+	fn get(&self, x: usize, y: usize) -> T;
+	fn set(&mut self, x: usize, y: usize, value: &T);
+}
+
 pub struct Grid<T> {
+	pub size: Vec2<usize>,
+	pub data: Vec<T>,
+}
+impl<T> Grid<T> {
+	#[inline(always)]
+	pub fn index(&self, x: usize, y: usize) -> usize {
+		y*self.size.x+x
+	}
+}
+impl<T> GridT<T> for Grid<T> where
+	T: Copy + Clone,
+{
+	fn new(x: usize, y: usize, default: &T) -> Self {
+		let s = x*y;
+		let mut data = Vec::with_capacity(x);
+		for _ in 0..s {
+			data.push(default.clone());
+		}
+		Self {
+			size: Vec2::new(x, y),
+			data: data
+		}
+	}
+	#[inline(always)]
+	fn get(&self, x: usize, y: usize) -> T {
+		self.data[self.index(x, y)]
+	}
+	#[inline(always)]
+	fn set(&mut self, x: usize, y: usize, value: &T) {
+		let i = self.index(x, y);
+		self.data[i] = value.clone();
+	}
+}
+
+pub struct Grid2<T> {
 	pub size: Vec2<usize>,
 	pub data: Vec<Vec<T>>,
 }
-impl<T> Grid<T> where
-	T: Default + Copy + Clone,
+impl<T> GridT<T> for Grid2<T> where
+	T: Copy + Clone,
 {
-	pub fn new(x: usize, y: usize) -> Self {
+	fn new(x: usize, y: usize, default: &T) -> Self {
 		let mut data = Vec::with_capacity(y);
 		for _ in 0..y {
 			let mut row = Vec::with_capacity(x);
 			for _ in 0..x {
-				row.push(T::default())
+				row.push(default.clone());
 			}
 			data.push(row);
 		}
@@ -46,13 +87,12 @@ impl<T> Grid<T> where
 			data: data
 		}
 	}
-	pub fn set_elem(&mut self, x: usize, y: usize, elem: &T) {
-		self.data[y][x] = elem.clone();
+	#[inline(always)]
+	fn get(&self, x: usize, y: usize) -> T {
+		self.data[y][x]
 	}
-	pub fn get_elem(&self, x: usize, y: usize) -> &T {
-		self.data[y].get(x).unwrap()
-	}
-	pub fn get_mut_elem(&mut self, x: usize, y: usize) -> &T {
-		self.data[y].get_mut(x).unwrap()
+	#[inline(always)]
+	fn set(&mut self, x: usize, y: usize, value: &T) {
+		self.data[y][x] = value.clone();
 	}
 }

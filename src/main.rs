@@ -1,4 +1,4 @@
-// File: lib.rs
+// File: main.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -23,19 +23,44 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#![feature(test)]
+extern crate test;
+
+use std::env::args;
+
 pub mod common;
 use common::ChallengeT;
 
 pub mod day_1;
 
-use std::env::args;
-
 pub fn main() {
-	for arg in args() {
-		match arg.as_str() {
-			a if a.starts_with("target") => (),
-			"1" => day_1::Challenge::print_result(),
-			_ => println!("ERROR: UNKNOWN ARGUMENT"),
+	if args().len() == 1 {
+		all();
+	} else {
+		for arg in args() {
+			match arg.as_str() {
+				a if a.starts_with("target") => (),
+				"all" => all(),
+				"1" => day_1::Challenge::print_result(),
+				_ => println!("ERROR: UNKNOWN ARGUMENT"),
+			}
 		}
+	}
+}
+fn all() {
+	day_1::Challenge::print_result();
+}
+
+#[cfg(test)]
+mod tests {
+	use super::all;
+    use test::{
+		Bencher,
+		// black_box
+	};
+
+    #[bench]
+    fn bench_all(b: &mut Bencher) {
+		b.iter(|| all() )
 	}
 }

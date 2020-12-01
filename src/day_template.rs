@@ -23,8 +23,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::*;
-
+use super::common::{
+	ChallengeT,
+};
 pub struct Challenge {}
 impl ChallengeT for Challenge {
 	type Output1 = usize;
@@ -33,29 +34,44 @@ impl ChallengeT for Challenge {
 	fn day() -> u8 {
 		1
 	}
-	fn part_1() -> usize {
-		let input = include_str!("../inputs/day_1.txt");
+	fn part_1() -> Self::Output1 {
+		include_str!("../inputs/day_1.txt")
+			.lines();
 		0
 	}
-	fn part_2() -> usize {
-		let input = include_str!("../inputs/day_1.txt");
+	fn part_2() -> Self::Output2 {
+		include_str!("../inputs/day_1.txt")
+			.lines();
 		0
 	}
 }
 
 #[cfg(test)]
 mod tests {
-	use crate::common::ChallengeT;
 	use super::Challenge;
+	use crate::common::{
+		ChallengeT,
+	};
+	use test::{
+		Bencher,
+		// black_box
+	};
 
 	#[test]
 	fn part_1_test() {
-		let res = Challenge::part_1();
-		assert_eq!(res, 0);
+		assert_eq!(Challenge::part_1(), 0);
 	}
 	#[test]
 	fn part_2_test() {
-		let res = Challenge::part_2();
-		assert_eq!(res, 0);
+		assert_eq!(Challenge::part_2(), 0);
+	}
+
+    #[bench]
+    fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_1() )
+	}
+    #[bench]
+    fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::part_2() )
 	}
 }

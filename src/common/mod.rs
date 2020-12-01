@@ -43,24 +43,3 @@ pub trait ChallengeT {
 	fn part_1() -> Self::Output1;
 	fn part_2() -> Self::Output2;
 }
-
-pub fn get_lines_from_content(input: &str) -> Vec<String> {
-	input.to_owned()
-		.lines()
-		.map(|line| line.to_owned())
-		.collect()
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn get_lines_from_file_test() {
-		let content = include_str!("../../inputs/test.txt");
-		let lines = get_lines_from_content(content);
-		assert_eq!(lines.len(), 2);
-		assert_eq!(lines[0], "Hello World!");
-		assert_eq!(lines[1], "We come in peace");
-	}
-}
