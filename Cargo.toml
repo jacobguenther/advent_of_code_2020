@@ -8,3 +8,5 @@ readme = "readme.md"
 repository = "https://github.com/jacobguenther/advent_of_code_2020"
 license-file = "license.txt"
 keywords = ["aoc", "advent of code", "challenge", "devember"]
+
+[dependencies]

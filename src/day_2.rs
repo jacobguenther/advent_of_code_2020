@@ -28,65 +28,71 @@ use super::common::{
 };
 
 pub struct Challenge {
-	report: Vec<u32>,
+	parsed_lines: Vec<(usize, usize, char, &'static str)>,
 }
 impl ChallengeT for Challenge {
-	type Output1 = u32;
-	type Output2 = u32;
+	type Output1 = usize;
+	type Output2 = usize;
 
 	fn day() -> u8 {
-		1
+		2
 	}
 	fn new() -> Self {
-		let input = include_str!("../inputs/day_1.txt");
-		let mut report = input.lines()
-			.map(|l| l.parse().unwrap() )
-			.collect::<Vec<u32>>();
-		report.sort();
+		let input = include_str!("../inputs/day_2.txt");
 		Self {
-			report: report,
+			parsed_lines: input
+				.lines()
+				.map(|line| parse_line(line))
+				.collect()
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		let mut u = self.report.len()-1;
-		let mut l = 0;
-		loop {
-			let upper = self.report[u];
-			let lower = self.report[l];
-			let sum = upper + lower;
-			if sum == 2020 {
-				return upper * lower;
-			} else if sum < 2020 {
-				l += 1;
-			} else {
-				u -= 1;
-			}
-		}
+		self.parsed_lines
+			.iter()
+			.filter(|(min, max, letter, password)| {
+				let count = password.chars().fold(0, |acc, c| {
+					if c == *letter { acc + 1 } else { acc }
+				});
+				count >= *min && count <= *max
+			})
+			.count()
 	}
 	fn part_2(&self) -> Self::Output2 {
-		let len = self.report.len();
-		for i in 0..(len-2) {
-			let mut l = i + 1;
-			let mut u = len - 1;
-			loop {
-				let first = self.report[i];
-				let second = self.report[l];
-				let third = self.report[u];
-				let sum = first + second + third;
-				if sum == 2020 {
-					return first * second * third;
-				} else if sum < 2020 {
-					l += 1;
-				} else {
-					u -= 1;
+		self.parsed_lines
+			.iter()
+			.filter(|(first_pos, second_pos, letter, password)| {
+				let (mut first, mut second) = (' ', ' ');
+				let (first_i, second_i) = (first_pos-1, second_pos-1);
+				for (i, c) in password[0..*second_pos].chars().enumerate() {
+					if first_i == i {
+						first = c;
+					} else if second_i == i {
+						second = c;
+					}
 				}
-				if l == u {
-					break;
-				}
-			}
-		}
-		0
+				let l = *letter;
+				(first != second) && (l == first || l == second)
+			})
+			.count()
 	}
+}
+fn parse_line(line: &str) -> (usize, usize, char, &str) {
+	let mut min: usize = 0;
+	let mut max: usize = 0;
+	let mut letter = ' ';
+	let mut password = "";
+	line.split(&['-', ' '][..])
+		.enumerate()
+		.for_each(|(i, s)| {
+			match i {
+				0 => min = s.parse().unwrap(),
+				1 => max = s.parse().unwrap(),
+				2 => letter = s.chars().nth(0).unwrap(),
+				3 => password = s,
+				_ => ()
+			}
+		});
+	(min, max, letter, password)
 }
 
 #[cfg(test)]
@@ -102,11 +108,11 @@ mod tests {
 
 	#[test]
 	fn part_1() {
-		assert_eq!(Challenge::new().part_1(), 545379);
+		assert_eq!(Challenge::new().part_1(), 517);
 	}
 	#[test]
 	fn part_2() {
-		assert_eq!(Challenge::new().part_2(), 257778836);
+		assert_eq!(Challenge::new().part_2(), 284);
 	}
 
     #[bench]

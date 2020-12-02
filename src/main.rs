@@ -32,6 +32,7 @@ pub mod common;
 use common::ChallengeT;
 
 pub mod day_1;
+pub mod day_2;
 
 pub fn main() {
 	if args().len() == 1 {
@@ -42,13 +43,18 @@ pub fn main() {
 				a if a.starts_with("target") => (),
 				"all" => all(),
 				"1" => day_1::Challenge::print_result(),
+				"2" => day_2::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
 	}
 }
 fn all() {
+	use std::time::{Instant};
+	let now = Instant::now();
 	day_1::Challenge::print_result();
+	day_2::Challenge::print_result();
+	println!("Estemated Time: {}ns", now.elapsed().as_nanos());
 }
 
 #[cfg(test)]

@@ -28,7 +28,7 @@ pub mod grid;
 
 use std::fmt;
 
-pub trait ChallengeT {
+pub trait ChallengeT where Self: Sized {
 	type Output1: fmt::Display;
 	type Output2: fmt::Display;
 
@@ -36,10 +36,13 @@ pub trait ChallengeT {
 		println!("{}", Self::result_string());
 	}
 	fn result_string() -> String {
-		format!("Day {}\n  part 1: {}\n  part 2: {}", Self::day(), Self::part_1(), Self::part_2())
+		let challenge = Self::new();
+		format!("Day {}\n  part 1: {}\n  part 2: {}", Self::day(), challenge.part_1(), challenge.part_2())
 	}
 
 	fn day() -> u8;
-	fn part_1() -> Self::Output1;
-	fn part_2() -> Self::Output2;
+
+	fn new() -> Self;
+	fn part_1(&self) -> Self::Output1;
+	fn part_2(&self) -> Self::Output2;
 }
