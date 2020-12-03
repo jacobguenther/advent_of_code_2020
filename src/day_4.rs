@@ -1,4 +1,4 @@
-// File: main.rs
+// File: day_4.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -23,56 +23,67 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#![feature(test)]
-extern crate test;
+use super::common::{
+	ChallengeT,
+};
 
-use std::env::args;
+pub struct Challenge {
+	input: &'static str,
+}
+impl ChallengeT for Challenge {
+	type Output1 = usize;
+	type Output2 = usize;
 
-pub mod common;
-use common::ChallengeT;
-
-pub mod day_1;
-pub mod day_2;
-pub mod day_3;
-pub mod day_4;
-
-pub fn main() {
-	if args().len() == 1 {
-		all();
-	} else {
-		for arg in args() {
-			match arg.as_str() {
-				a if a.starts_with("target") => (),
-				"all" => all(),
-				"1" => day_1::Challenge::print_result(),
-				"2" => day_2::Challenge::print_result(),
-				"3" => day_3::Challenge::print_result(),
-				"4" => day_4::Challenge::print_result(),
-				_ => println!("ERROR: UNKNOWN ARGUMENT"),
-			}
+	fn day() -> u8 {
+		4
+	}
+	fn new() -> Self {
+		Self {
+			input: include_str!("../inputs/day_4.txt"),
 		}
 	}
-}
-fn all() {
-	use std::time::{Instant};
-	let now = Instant::now();
-	day_1::Challenge::print_result();
-	day_2::Challenge::print_result();
-	day_3::Challenge::print_result();
-	day_4::Challenge::print_result();
-	println!("Estemated Time: {}ms", now.elapsed().as_millis());
+	fn part_1(&self) -> Self::Output1 {
+		0
+	}
+	fn part_2(&self) -> Self::Output2 {
+		0
+	}
 }
 
 #[cfg(test)]
 mod tests {
-	use super::all;
-    use test::{
+	use super::Challenge;
+	use crate::common::{
+		ChallengeT,
+	};
+	use test::{
 		Bencher,
 		// black_box
 	};
 
+	#[test]
+	fn part_1_test() {
+		assert_eq!(Challenge::new().part_1(), 0);
+	}
+	#[test]
+	fn part_2_test() {
+		assert_eq!(Challenge::new().part_2(), 0);
+	}
+
+	#[bench]
+    fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1() )
+	}
     #[bench]
-    fn bench_all(b: &mut Bencher) {
-		b.iter(|| all() )
+    fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2() )
+	}
+    #[bench]
+    fn both(b: &mut Bencher) {
+		b.iter(|| {
+			let challenge = Challenge::new();
+			challenge.part_1();
+			challenge.part_2();
+		})
 	}
 }
