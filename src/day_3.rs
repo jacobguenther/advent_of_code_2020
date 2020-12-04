@@ -55,23 +55,26 @@ impl ChallengeT for Challenge {
 	}
 	fn part_2(&self) -> Self::Output2 {
 		let steps = [(1, 1), (5, 1), (7, 1), (1, 2)];
-		self.part_1_result * steps.iter()
+		let part_2_partial = steps.iter()
 			.map(|step| count_trees_hit(&self.tree_map, step.0, step.1) )
-		.product::<usize>()
+			.product::<usize>();
+		self.part_1_result * part_2_partial
 	}
 }
 fn count_trees_hit(tree_map: &TreeMap, step_x: usize, step_y: usize) -> usize {
-	let mut pos_x = 0;
+	let width = tree_map[0].len();
+	let slope = step_x / step_y;
 	tree_map.iter()
 		.enumerate()
-		.filter(|(i, _)| i % step_y == 0 )
-		.fold(0, |acc, (_, line)| {
-			if pos_x >= line.len() {
-				pos_x = pos_x - line.len();
-			}
-			let i = pos_x;
-			pos_x += step_x;
-			acc + line[i] as usize
+		.filter(|(step_i, _)| step_i % step_y == 0 )
+		.fold(0, |hits, (step_i, row)| {
+			let maybe_pos_x = step_i * slope;
+			let pos_x = if maybe_pos_x >= width {
+				maybe_pos_x % width
+			} else {
+				maybe_pos_x
+			};
+			hits + row[pos_x] as usize
 		})
 }
 
@@ -81,10 +84,7 @@ mod tests {
 	use crate::common::{
 		ChallengeT,
 	};
-	use test::{
-		Bencher,
-		// black_box
-	};
+	use test::Bencher;
 
 	#[test]
 	fn part_1_test() {

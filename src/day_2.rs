@@ -61,17 +61,17 @@ impl ChallengeT for Challenge {
 		self.parsed_lines
 			.iter()
 			.filter(|(first_pos, second_pos, letter, password)| {
-				let (mut first, mut second) = (' ', ' ');
+				let (mut first_letter, mut second_letter) = (' ', ' ');
 				let (first_i, second_i) = (first_pos-1, second_pos-1);
 				for (i, c) in password[0..*second_pos].chars().enumerate() {
 					if first_i == i {
-						first = c;
+						first_letter = c;
 					} else if second_i == i {
-						second = c;
+						second_letter = c;
 					}
 				}
-				let l = *letter;
-				(first != second) && (l == first || l == second)
+				first_letter != second_letter
+				&& (*letter == first_letter || *letter == second_letter)
 			})
 			.count()
 	}
@@ -101,10 +101,7 @@ mod tests {
 	use crate::common::{
 		ChallengeT,
 	};
-	use test::{
-		Bencher,
-		// black_box
-	};
+	use test::Bencher;
 
 	#[test]
 	fn part_1() {

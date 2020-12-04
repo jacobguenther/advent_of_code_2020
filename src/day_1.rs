@@ -48,39 +48,39 @@ impl ChallengeT for Challenge {
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		let mut u = self.report.len()-1;
-		let mut l = 0;
+		let mut lower_i = 0;
+		let mut upper_i = self.report.len()-1;
 		loop {
-			let upper = self.report[u];
-			let lower = self.report[l];
+			let lower = self.report[lower_i];
+			let upper = self.report[upper_i];
 			let sum = upper + lower;
 			if sum == 2020 {
 				return upper * lower;
 			} else if sum < 2020 {
-				l += 1;
+				lower_i += 1;
 			} else {
-				u -= 1;
+				upper_i -= 1;
 			}
 		}
 	}
 	fn part_2(&self) -> Self::Output2 {
 		let len = self.report.len();
 		for i in 0..(len-2) {
-			let mut l = i + 1;
-			let mut u = len - 1;
+			let mut lower_i = i + 1;
+			let mut upper_i = len - 1;
 			loop {
 				let first = self.report[i];
-				let second = self.report[l];
-				let third = self.report[u];
+				let second = self.report[lower_i];
+				let third = self.report[upper_i];
 				let sum = first + second + third;
 				if sum == 2020 {
 					return first * second * third;
 				} else if sum < 2020 {
-					l += 1;
+					lower_i += 1;
 				} else {
-					u -= 1;
+					upper_i -= 1;
 				}
-				if l == u {
+				if lower_i == upper_i {
 					break;
 				}
 			}
@@ -95,10 +95,7 @@ mod tests {
 	use crate::common::{
 		ChallengeT,
 	};
-	use test::{
-		Bencher,
-		// black_box
-	};
+	use test::Bencher;
 
 	#[test]
 	fn part_1() {
