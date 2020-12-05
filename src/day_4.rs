@@ -39,7 +39,7 @@ impl ChallengeT for Challenge {
 		4
 	}
 	fn new() -> Self {
-		let [part_1_result, part_2_result] =include_str!("../inputs/day_4.txt")
+		let [part_1_result, part_2_result] = include_str!("../inputs/day_4.txt")
 			.split("\n\n")
 			.map(|with_whitespaces|
 				with_whitespaces.replace(char::is_whitespace, ":")
@@ -50,8 +50,8 @@ impl ChallengeT for Challenge {
 					.iter()
 					.zip(&key_value[1..])
 					.fold([Partial::default(), Partial::default()], |acc, (key, value)| {
-						[add_to_partial_1(&acc[0], key),
-						 add_to_partial_2(&acc[1], key, value)]
+						[to_partial_1(&acc[0], key),
+						 to_partial_2(&acc[1], key, value)]
 					});
 				[acc[0] + partial_1.is_valid() as usize,
 				 acc[1] + partial_2.is_valid() as usize]
@@ -69,7 +69,7 @@ impl ChallengeT for Challenge {
 		self.part_2_result
 	}
 }
-fn add_to_partial_1(partial: &Partial, key: &str) -> Partial {
+fn to_partial_1(partial: &Partial, key: &str) -> Partial {
 	let mut new = partial.clone();
 	match key {
 		"byr" => new.birth_year = true,
@@ -83,7 +83,7 @@ fn add_to_partial_1(partial: &Partial, key: &str) -> Partial {
 	}
 	new
 }
-fn add_to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
+fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 	let mut new = partial.clone();
 	match key {
 		"byr" => new.birth_year = {
@@ -95,8 +95,8 @@ fn add_to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 			2009 < v && v < 2021
 		},
 		"eyr" => new.experation_year = {
-				let v = value.parse().unwrap();
-				2019 < v && v < 2031
+			let v = value.parse().unwrap();
+			2019 < v && v < 2031
 		},
 		"hgt" => new.height = {
 			let len = value.len();
@@ -117,10 +117,7 @@ fn add_to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 			} else {
 				let mut temp = true;
 				for c in value[1..].chars() {
-					if !(c.is_digit(10)
-						|| c == 'a' || c == 'b' || c == 'c'
-						|| c == 'd' || c == 'e' || c == 'f')
-					{
+					if !c.is_ascii_hexdigit() {
 						temp = false;
 						break;
 					}
@@ -138,7 +135,7 @@ fn add_to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 			} else {
 				let mut are_digits = true;
 				for c in value.chars() {
-					if !c.is_digit(10) {
+					if !c.is_ascii_digit() {
 						are_digits = false;
 						break;
 					}
@@ -155,11 +152,9 @@ struct Partial {
 	birth_year: bool,
 	issue_year: bool,
 	experation_year: bool,
-
 	height: bool,
 	hair_color: bool,
 	eye_color: bool,
-
 	passport_id: bool,
 }
 impl Default for Partial {
@@ -168,26 +163,22 @@ impl Default for Partial {
 			birth_year: false,
 			issue_year: false,
 			experation_year: false,
-
 			height: false,
 			hair_color: false,
 			eye_color: false,
-
 			passport_id: false,
 		}
 	}
 }
 impl Partial {
 	fn is_valid(&self) -> bool {
-		self.birth_year &&
-		self.issue_year &&
-		self.experation_year &&
-
-		self.height &&
-		self.hair_color &&
-		self.eye_color &&
-
-		self.passport_id
+		self.birth_year
+		&& self.issue_year
+		&& self.experation_year
+		&& self.height
+		&& self.hair_color
+		&& self.eye_color
+		&& self.passport_id
 	}
 }
 #[cfg(test)]
