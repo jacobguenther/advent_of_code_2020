@@ -35,6 +35,7 @@ pub mod day_1;
 pub mod day_2;
 pub mod day_3;
 pub mod day_4;
+pub mod day_5;
 
 pub fn main() {
 	if args().len() == 1 {
@@ -48,6 +49,7 @@ pub fn main() {
 				"2" => day_2::Challenge::print_result(),
 				"3" => day_3::Challenge::print_result(),
 				"4" => day_4::Challenge::print_result(),
+				"5" => day_5::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -56,20 +58,20 @@ pub fn main() {
 fn all() {
 	use std::time::{Instant};
 	let now = Instant::now();
+
 	day_1::Challenge::print_result();
 	day_2::Challenge::print_result();
 	day_3::Challenge::print_result();
 	day_4::Challenge::print_result();
+	day_4::Challenge::print_result();
+
 	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
 
 #[cfg(test)]
 mod tests {
 	use super::all;
-    use test::{
-		Bencher,
-		// black_box
-	};
+    use test::Bencher;
 
     #[bench]
     fn bench_all(b: &mut Bencher) {
