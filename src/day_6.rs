@@ -45,15 +45,18 @@ impl ChallengeT for Challenge {
 				// part 1
 				let group_answers_count = group
 					.split_whitespace()
-					.collect::<String>()
-					.chars()
-					.collect::<HashSet<char>>()
+					.fold(HashSet::new(), |mut acc, s| {
+						s.chars().for_each(|c| {
+							acc.insert(c);
+						});
+						acc
+					})
 					.len();
 
 				// part 2
 				let member_answers = group
 					.split_whitespace()
-					.map(|answers| answers.to_owned().chars().collect::<HashSet<char>>())
+					.map(|answers| answers.chars().collect::<HashSet<char>>())
 					.collect::<Vec<HashSet<char>>>();
 
 				let group_all_yes_answers_count = member_answers[1..]
