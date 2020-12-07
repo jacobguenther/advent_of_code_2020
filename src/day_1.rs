@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use super::common::ChallengeT;
 
 pub struct Challenge {
 	report: Vec<u32>,
@@ -39,17 +37,16 @@ impl ChallengeT for Challenge {
 	}
 	fn new() -> Self {
 		let input = include_str!("../inputs/day_1.txt");
-		let mut report = input.lines()
-			.map(|l| l.parse().unwrap() )
+		let mut report = input
+			.lines()
+			.map(|l| l.parse().unwrap())
 			.collect::<Vec<u32>>();
 		report.sort();
-		Self {
-			report: report,
-		}
+		Self { report: report }
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let mut lower_i = 0;
-		let mut upper_i = self.report.len()-1;
+		let mut upper_i = self.report.len() - 1;
 		loop {
 			let lower = self.report[lower_i];
 			let upper = self.report[upper_i];
@@ -65,7 +62,7 @@ impl ChallengeT for Challenge {
 	}
 	fn part_2(&self) -> Self::Output2 {
 		let len = self.report.len();
-		for i in 0..(len-2) {
+		for i in 0..(len - 2) {
 			let mut lower_i = i + 1;
 			let mut upper_i = len - 1;
 			loop {
@@ -92,9 +89,7 @@ impl ChallengeT for Challenge {
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
+	use crate::common::ChallengeT;
 	use test::Bencher;
 
 	#[test]
@@ -106,16 +101,16 @@ mod tests {
 		assert_eq!(Challenge::new().part_2(), 257778836);
 	}
 
-    #[bench]
-    fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_1() )
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
 	}
-    #[bench]
-    fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_2() )
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
 	}
-    #[bench]
-    fn both(b: &mut Bencher) {
+	#[bench]
+	fn both(b: &mut Bencher) {
 		b.iter(|| {
 			let challenge = Challenge::new();
 			challenge.part_1();

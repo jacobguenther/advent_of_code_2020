@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use super::common::ChallengeT;
 
 pub struct Challenge {
 	part_1_result: usize,
@@ -41,20 +39,22 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let [part_1_result, part_2_result] = include_str!("../inputs/day_4.txt")
 			.split("\n\n")
-			.map(|with_whitespaces|
-				with_whitespaces.replace(char::is_whitespace, ":")
-			)
+			.map(|with_whitespaces| with_whitespaces.replace(char::is_whitespace, ":"))
 			.fold([0, 0], |acc: [usize; 2], passport_string| {
 				let key_value = passport_string.split(':').collect::<Vec<&str>>();
-				let [partial_1, partial_2] = key_value
-					.iter()
-					.zip(&key_value[1..])
-					.fold([Partial::default(), Partial::default()], |acc, (key, value)| {
-						[to_partial_1(&acc[0], key),
-						 to_partial_2(&acc[1], key, value)]
-					});
-				[acc[0] + partial_1.is_valid() as usize,
-				 acc[1] + partial_2.is_valid() as usize]
+				let [partial_1, partial_2] = key_value.iter().zip(&key_value[1..]).fold(
+					[Partial::default(), Partial::default()],
+					|acc, (key, value)| {
+						[
+							to_partial_1(&acc[0], key),
+							to_partial_2(&acc[1], key, value),
+						]
+					},
+				);
+				[
+					acc[0] + partial_1.is_valid() as usize,
+					acc[1] + partial_2.is_valid() as usize,
+				]
 			});
 
 		Self {
@@ -86,63 +86,79 @@ fn to_partial_1(partial: &Partial, key: &str) -> Partial {
 fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 	let mut new = partial.clone();
 	match key {
-		"byr" => new.birth_year = {
-			let v = value.parse().unwrap();
-			1919 < v && v < 2003
-		},
-		"iyr" => new.issue_year = {
-			let v = value.parse().unwrap();
-			2009 < v && v < 2021
-		},
-		"eyr" => new.experation_year = {
-			let v = value.parse().unwrap();
-			2019 < v && v < 2031
-		},
-		"hgt" => new.height = {
-			let len = value.len();
-			match *&value[..(len-2)].parse::<usize>() {
-				Ok(n) => if value.trim().ends_with("cm") {
-						149 < n && n < 194
-					} else if value.trim().ends_with("in") {
-						58 < n && n < 77
-					} else {
-						false
-					}
-				Err(_) => false,
+		"byr" => {
+			new.birth_year = {
+				let v = value.parse().unwrap();
+				1919 < v && v < 2003
 			}
-		},
-		"hcl" => new.hair_color = {
-			if value.len() != 7 || value.chars().nth(0).unwrap() != '#'{
-				false
-			} else {
-				let mut temp = true;
-				for c in value[1..].chars() {
-					if !c.is_ascii_hexdigit() {
-						temp = false;
-						break;
+		}
+		"iyr" => {
+			new.issue_year = {
+				let v = value.parse().unwrap();
+				2009 < v && v < 2021
+			}
+		}
+		"eyr" => {
+			new.experation_year = {
+				let v = value.parse().unwrap();
+				2019 < v && v < 2031
+			}
+		}
+		"hgt" => {
+			new.height = {
+				let len = value.len();
+				match *&value[..(len - 2)].parse::<usize>() {
+					Ok(n) => {
+						if value.trim().ends_with("cm") {
+							149 < n && n < 194
+						} else if value.trim().ends_with("in") {
+							58 < n && n < 77
+						} else {
+							false
+						}
 					}
+					Err(_) => false,
 				}
-				temp
 			}
-		},
-		"ecl" => new.eye_color = match value {
-			"amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
-			_ => false,
-		},
-		"pid" => new.passport_id = {
-			if value.len() != 9 {
-				false
-			} else {
-				let mut are_digits = true;
-				for c in value.chars() {
-					if !c.is_ascii_digit() {
-						are_digits = false;
-						break;
+		}
+		"hcl" => {
+			new.hair_color = {
+				if value.len() != 7 || value.chars().nth(0).unwrap() != '#' {
+					false
+				} else {
+					let mut temp = true;
+					for c in value[1..].chars() {
+						if !c.is_ascii_hexdigit() {
+							temp = false;
+							break;
+						}
 					}
+					temp
 				}
-				are_digits
 			}
-		},
+		}
+		"ecl" => {
+			new.eye_color = match value {
+				"amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
+				_ => false,
+			}
+		}
+		"pid" => {
+			new.passport_id = {
+				if value.len() != 9 {
+					false
+				} else {
+					let mut are_digits = true;
+					for c in value.chars() {
+						if !c.is_ascii_digit() {
+							are_digits = false;
+							break;
+						}
+					}
+					are_digits
+				}
+			}
+		}
 		_ => (),
 	}
 	new
@@ -173,20 +189,18 @@ impl Default for Partial {
 impl Partial {
 	fn is_valid(&self) -> bool {
 		self.birth_year
-		&& self.issue_year
-		&& self.experation_year
-		&& self.height
-		&& self.hair_color
-		&& self.eye_color
-		&& self.passport_id
+			&& self.issue_year
+			&& self.experation_year
+			&& self.height
+			&& self.hair_color
+			&& self.eye_color
+			&& self.passport_id
 	}
 }
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
+	use crate::common::ChallengeT;
 	use test::Bencher;
 
 	#[test]
@@ -198,8 +212,8 @@ mod tests {
 		assert_eq!(Challenge::new().part_2(), 194);
 	}
 
-    #[bench]
-    fn both(b: &mut Bencher) {
+	#[bench]
+	fn both(b: &mut Bencher) {
 		b.iter(|| {
 			let challenge = Challenge::new();
 			challenge.part_1();

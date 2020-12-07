@@ -38,21 +38,22 @@ pub struct Grid<T> {
 impl<T> Grid<T> {
 	#[inline(always)]
 	pub fn index(&self, x: usize, y: usize) -> usize {
-		y*self.size.x+x
+		y * self.size.x + x
 	}
 }
-impl<T> GridT<T> for Grid<T> where
+impl<T> GridT<T> for Grid<T>
+where
 	T: Copy + Clone,
 {
 	fn new(x: usize, y: usize, default: &T) -> Self {
-		let s = x*y;
+		let s = x * y;
 		let mut data = Vec::with_capacity(x);
 		for _ in 0..s {
 			data.push(default.clone());
 		}
 		Self {
 			size: Vec2::new(x, y),
-			data: data
+			data: data,
 		}
 	}
 	#[inline(always)]
@@ -70,7 +71,8 @@ pub struct Grid2<T> {
 	pub size: Vec2<usize>,
 	pub data: Vec<Vec<T>>,
 }
-impl<T> GridT<T> for Grid2<T> where
+impl<T> GridT<T> for Grid2<T>
+where
 	T: Copy + Clone,
 {
 	fn new(x: usize, y: usize, default: &T) -> Self {
@@ -84,7 +86,7 @@ impl<T> GridT<T> for Grid2<T> where
 		}
 		Self {
 			size: Vec2::new(x, y),
-			data: data
+			data: data,
 		}
 	}
 	#[inline(always)]

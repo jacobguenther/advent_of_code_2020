@@ -30,25 +30,16 @@ pub struct Vec2<T> {
 }
 impl<T> Vec2<T> {
 	pub fn new(x: T, y: T) -> Self {
-		Self {
-			x: x,
-			y: y,
-		}
+		Self { x: x, y: y }
 	}
 }
 impl Default for Vec2<i32> {
 	fn default() -> Self {
-		Self {
-			x: 0,
-			y: 0,
-		}
+		Self { x: 0, y: 0 }
 	}
 }
 impl Default for Vec2<usize> {
 	fn default() -> Self {
-		Self {
-			x: 0,
-			y: 0,
-		}
+		Self { x: 0, y: 0 }
 	}
 }

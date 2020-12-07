@@ -23,6 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#![feature(iterator_fold_self)]
 #![feature(test)]
 extern crate test;
 
@@ -36,6 +37,7 @@ pub mod day_2;
 pub mod day_3;
 pub mod day_4;
 pub mod day_5;
+pub mod day_6;
 
 pub fn main() {
 	if args().len() == 1 {
@@ -50,13 +52,14 @@ pub fn main() {
 				"3" => day_3::Challenge::print_result(),
 				"4" => day_4::Challenge::print_result(),
 				"5" => day_5::Challenge::print_result(),
+				"6" => day_6::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
 	}
 }
 fn all() {
-	use std::time::{Instant};
+	use std::time::Instant;
 	let now = Instant::now();
 
 	day_1::Challenge::print_result();
@@ -64,6 +67,8 @@ fn all() {
 	day_3::Challenge::print_result();
 	day_4::Challenge::print_result();
 	day_4::Challenge::print_result();
+	day_5::Challenge::print_result();
+	day_6::Challenge::print_result();
 
 	println!("Estemated Time: {}ms", now.elapsed().as_millis());
 }
@@ -71,10 +76,10 @@ fn all() {
 #[cfg(test)]
 mod tests {
 	use super::all;
-    use test::Bencher;
+	use test::Bencher;
 
-    #[bench]
-    fn bench_all(b: &mut Bencher) {
-		b.iter(|| all() )
+	#[bench]
+	fn bench_all(b: &mut Bencher) {
+		b.iter(|| all())
 	}
 }

@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use super::common::ChallengeT;
 
 pub struct Challenge {
 	parsed_lines: Vec<(usize, usize, char, &'static str)>,
@@ -40,19 +38,16 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let input = include_str!("../inputs/day_2.txt");
 		Self {
-			parsed_lines: input
-				.lines()
-				.map(|line| parse_line(line))
-				.collect()
+			parsed_lines: input.lines().map(|line| parse_line(line)).collect(),
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
 		self.parsed_lines
 			.iter()
 			.filter(|(min, max, letter, password)| {
-				let count = password.chars().fold(0, |acc, c| {
-					if c == *letter { acc + 1 } else { acc }
-				});
+				let count = password
+					.chars()
+					.fold(0, |acc, c| if c == *letter { acc + 1 } else { acc });
 				count >= *min && count <= *max
 			})
 			.count()
@@ -62,7 +57,7 @@ impl ChallengeT for Challenge {
 			.iter()
 			.filter(|(first_pos, second_pos, letter, password)| {
 				let (mut first_letter, mut second_letter) = (' ', ' ');
-				let (first_i, second_i) = (first_pos-1, second_pos-1);
+				let (first_i, second_i) = (first_pos - 1, second_pos - 1);
 				for (i, c) in password[0..*second_pos].chars().enumerate() {
 					if first_i == i {
 						first_letter = c;
@@ -71,7 +66,7 @@ impl ChallengeT for Challenge {
 					}
 				}
 				first_letter != second_letter
-				&& (*letter == first_letter || *letter == second_letter)
+					&& (*letter == first_letter || *letter == second_letter)
 			})
 			.count()
 	}
@@ -83,14 +78,12 @@ fn parse_line(line: &str) -> (usize, usize, char, &str) {
 	let mut password = "";
 	line.split(&['-', ' '][..])
 		.enumerate()
-		.for_each(|(i, s)| {
-			match i {
-				0 => min = s.parse().unwrap(),
-				1 => max = s.parse().unwrap(),
-				2 => letter = s.chars().nth(0).unwrap(),
-				3 => password = s,
-				_ => ()
-			}
+		.for_each(|(i, s)| match i {
+			0 => min = s.parse().unwrap(),
+			1 => max = s.parse().unwrap(),
+			2 => letter = s.chars().nth(0).unwrap(),
+			3 => password = s,
+			_ => (),
 		});
 	(min, max, letter, password)
 }
@@ -98,9 +91,7 @@ fn parse_line(line: &str) -> (usize, usize, char, &str) {
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
+	use crate::common::ChallengeT;
 	use test::Bencher;
 
 	#[test]
@@ -112,16 +103,16 @@ mod tests {
 		assert_eq!(Challenge::new().part_2(), 284);
 	}
 
-    #[bench]
-    fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_1() )
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
 	}
-    #[bench]
-    fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_2() )
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
 	}
-    #[bench]
-    fn both(b: &mut Bencher) {
+	#[bench]
+	fn both(b: &mut Bencher) {
 		b.iter(|| {
 			let challenge = Challenge::new();
 			challenge.part_1();

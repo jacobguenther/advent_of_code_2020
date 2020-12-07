@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use super::common::ChallengeT;
 
 pub struct Challenge {
 	part_1_result: usize,
@@ -39,34 +37,37 @@ impl ChallengeT for Challenge {
 		5
 	}
 	fn new() -> Self {
+		let mut lowest = usize::MAX;
 		let mut highest = 0;
-		let mut filled_seat_ids: Vec<usize> = vec![0; 128*8];
-		include_str!("../inputs/day_5.txt").lines()
+		let mut filled_seat_ids = vec![0; 128 * 8];
+		include_str!("../inputs/day_5.txt")
+			.lines()
 			.for_each(|line| {
-				let row = get_row(line);
-				let col = get_seat(line);
-				let seat_id = row * 8 + col;
+				let seat_id = get_id(line);
 				filled_seat_ids[seat_id] = seat_id;
 				if seat_id > highest {
 					highest = seat_id;
 				}
+				if seat_id != 0 && seat_id < lowest {
+					lowest = seat_id;
+				}
 			});
 
-		let mut my_id = 0;
-		&filled_seat_ids[0..].iter()
-			.zip(&filled_seat_ids[1..])
-			.zip(&filled_seat_ids[2..])
-			.find(|((previouse, current), next)|
-				if **current == 0 && **previouse + 2 == **next {
-					my_id = **previouse + 1;
+		let (previous, _) = &filled_seat_ids[lowest..]
+			.iter()
+			.zip(&filled_seat_ids[(lowest + 1)..])
+			.find(|(previous, next)| {
+				if **previous + 1 != **next {
 					true
 				} else {
 					false
-				});
+				}
+			})
+			.unwrap();
 
 		Self {
 			part_1_result: highest,
-			part_2_result: my_id,
+			part_2_result: *previous + 1,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -77,66 +78,33 @@ impl ChallengeT for Challenge {
 	}
 }
 
-fn get_row(line: &str) -> usize {
-	let mut lower_row = 0;
-	let mut upper_row = 127;
-	let mut row = 0;
-	for (i, c) in (&line[0..7]).chars().enumerate() {
-		if i == 6 && c == 'B' {
-			row = upper_row;
-		} else if i == 6 && c == 'F' {
-			row = lower_row;
-		}
-		match c {
-			'B' => lower_row += split(upper_row, lower_row),
-			'F' => upper_row -= split(upper_row, lower_row),
-			_ => (),
-		}
-	}
-	row
+fn get_id(line: &str) -> usize {
+	line.chars().fold(0, |acc, c| {
+		acc * 2
+			+ match c {
+				'B' | 'R' => 1,
+				_ => 0,
+			}
+	})
 }
-fn get_seat(line: &str) -> usize {
-	let mut lower_seat = 0;
-	let mut upper_seat = 7;
-	let mut col = 0;
-	for (i, c) in (&line[7..]).chars().enumerate() {
-		if i == 2 && c == 'L' {
-			col = lower_seat;
-		} else if i == 2 && c == 'R' {
-			col = upper_seat;
-		}
-		match c {
-			'R' => lower_seat += split(upper_seat, lower_seat),
-			'L' => upper_seat -= split(upper_seat, lower_seat),
-			_ => (),
-		}
-	}
-	col
-}
-fn split(upper: usize, lower: usize) -> usize {
-	((upper - lower) as f32 / 2.0).ceil() as usize
-}
-
 
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
+	use crate::common::ChallengeT;
 	use test::Bencher;
 
 	#[test]
 	fn part_1_test() {
-		assert_eq!(Challenge::new().part_1(), 235);
+		assert_eq!(Challenge::new().part_1(), 974);
 	}
 	#[test]
 	fn part_2_test() {
-		assert_eq!(Challenge::new().part_2(), 194);
+		assert_eq!(Challenge::new().part_2(), 646);
 	}
 
-    #[bench]
-    fn both(b: &mut Bencher) {
+	#[bench]
+	fn both(b: &mut Bencher) {
 		b.iter(|| {
 			let challenge = Challenge::new();
 			challenge.part_1();

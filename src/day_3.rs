@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use super::common::ChallengeT;
 
 type TreeMap = Vec<Vec<bool>>;
 
@@ -43,7 +41,7 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let tree_map = include_str!("../inputs/day_3.txt")
 			.lines()
-			.map(|line| line.chars().map(|c| c == '#' ).collect() )
+			.map(|line| line.chars().map(|c| c == '#').collect())
 			.collect();
 		Self {
 			part_1_result: count_trees_hit(&tree_map, 3, 1),
@@ -55,25 +53,21 @@ impl ChallengeT for Challenge {
 	}
 	fn part_2(&self) -> Self::Output2 {
 		let steps = [(1, 1), (5, 1), (7, 1), (1, 2)];
-		let part_2_partial = steps.iter()
-			.map(|step| count_trees_hit(&self.tree_map, step.0, step.1) )
+		let part_2_partial = steps
+			.iter()
+			.map(|step| count_trees_hit(&self.tree_map, step.0, step.1))
 			.product::<usize>();
 		self.part_1_result * part_2_partial
 	}
 }
 fn count_trees_hit(tree_map: &TreeMap, step_x: usize, step_y: usize) -> usize {
 	let width = tree_map[0].len();
-	let slope = step_x / step_y;
-	tree_map.iter()
+	tree_map
+		.iter()
 		.enumerate()
-		.filter(|(step_i, _)| step_i % step_y == 0 )
+		.filter(|(step_i, _)| step_i % step_y == 0)
 		.fold(0, |hits, (step_i, row)| {
-			let maybe_pos_x = step_i * slope;
-			let pos_x = if maybe_pos_x >= width {
-				maybe_pos_x % width
-			} else {
-				maybe_pos_x
-			};
+			let pos_x = step_i * step_x / step_y % width;
 			hits + row[pos_x] as usize
 		})
 }
@@ -81,9 +75,7 @@ fn count_trees_hit(tree_map: &TreeMap, step_x: usize, step_y: usize) -> usize {
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
+	use crate::common::ChallengeT;
 	use test::Bencher;
 
 	#[test]
@@ -96,15 +88,15 @@ mod tests {
 	}
 
 	#[bench]
-    fn part_1_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_1() )
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
 	}
-    #[bench]
-    fn part_2_bench(b: &mut Bencher) {
-		b.iter(|| Challenge::new().part_2() )
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
 	}
-    #[bench]
-    fn both(b: &mut Bencher) {
+	#[bench]
+	fn both(b: &mut Bencher) {
 		b.iter(|| {
 			let challenge = Challenge::new();
 			challenge.part_1();

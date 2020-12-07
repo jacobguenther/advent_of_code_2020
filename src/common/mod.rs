@@ -23,12 +23,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-pub mod vec2;
 pub mod grid;
+pub mod vec2;
 
 use std::fmt;
 
-pub trait ChallengeT where Self: Sized {
+pub trait ChallengeT
+where
+	Self: Sized,
+{
 	type Output1: fmt::Display;
 	type Output2: fmt::Display;
 
@@ -37,7 +40,12 @@ pub trait ChallengeT where Self: Sized {
 	}
 	fn result_string() -> String {
 		let challenge = Self::new();
-		format!("Day {}\n  part 1: {}\n  part 2: {}", Self::day(), challenge.part_1(), challenge.part_2())
+		format!(
+			"Day {}\n  part 1: {}\n  part 2: {}",
+			Self::day(),
+			challenge.part_1(),
+			challenge.part_2()
+		)
 	}
 
 	fn day() -> u8;
