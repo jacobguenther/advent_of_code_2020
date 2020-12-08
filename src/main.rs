@@ -39,6 +39,7 @@ pub mod day_5;
 pub mod day_6;
 pub mod day_7;
 pub mod day_8;
+pub mod day_9;
 
 pub fn main() {
 	if args().len() == 1 {
@@ -56,6 +57,7 @@ pub fn main() {
 				"6" => day_6::Challenge::print_result(),
 				"7" => day_7::Challenge::print_result(),
 				"8" => day_8::Challenge::print_result(),
+				"9" => day_9::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -74,6 +76,7 @@ fn all() {
 	day_6::Challenge::print_result();
 	day_7::Challenge::print_result();
 	day_8::Challenge::print_result();
+	day_9::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(
