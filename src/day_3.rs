@@ -41,7 +41,7 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let tree_map = include_str!("../inputs/day_3.txt")
 			.lines()
-			.map(|line| line.chars().map(|c| c == '#').collect())
+			.map(|line| line.bytes().map(|b| b == '#' as u8).collect())
 			.collect();
 		Self {
 			part_1_result: count_trees_hit(&tree_map, 3, 1),
