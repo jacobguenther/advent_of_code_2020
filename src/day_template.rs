@@ -40,7 +40,6 @@ impl ChallengeT for Challenge {
 		let input = nclude_str!("../inputs/day_1.txt");
 		Self {
 			input: input,
-
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {

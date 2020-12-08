@@ -23,7 +23,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#![feature(iterator_fold_self)]
 #![feature(test)]
 extern crate test;
 
@@ -38,6 +37,8 @@ pub mod day_3;
 pub mod day_4;
 pub mod day_5;
 pub mod day_6;
+pub mod day_7;
+pub mod day_8;
 
 pub fn main() {
 	if args().len() == 1 {
@@ -53,6 +54,8 @@ pub fn main() {
 				"4" => day_4::Challenge::print_result(),
 				"5" => day_5::Challenge::print_result(),
 				"6" => day_6::Challenge::print_result(),
+				"7" => day_7::Challenge::print_result(),
+				"8" => day_8::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -69,8 +72,15 @@ fn all() {
 	day_4::Challenge::print_result();
 	day_5::Challenge::print_result();
 	day_6::Challenge::print_result();
+	day_7::Challenge::print_result();
+	day_8::Challenge::print_result();
 
-	println!("Estemated Time: {}ms", now.elapsed().as_millis());
+	let elapsed = now.elapsed();
+	println!(
+		"Estemated Time: {}ms or {}ns",
+		elapsed.as_millis(),
+		elapsed.as_nanos()
+	);
 }
 
 #[cfg(test)]
