@@ -1,4 +1,4 @@
-// File: day_5.rs
+// File: day_6.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -36,28 +36,29 @@ impl ChallengeT for Challenge {
 	type Output2 = usize;
 
 	fn day() -> u8 {
-		5
+		6
 	}
 	fn new() -> Self {
 		let [p1, p2] = include_str!("../inputs/day_6.txt")
 			.split("\n\n")
 			.map(|group| {
 				// part 1
-				let group_answers_count = group
-					.split_whitespace()
-					.fold(HashSet::new(), |mut acc, s| {
-						s.chars().for_each(|c| {
-							acc.insert(c);
-						});
+				let mut group_answers = group.split_whitespace().fold(
+					Vec::<u8>::with_capacity(group.len()),
+					|mut acc, s| {
+						acc.extend(s.as_bytes());
 						acc
-					})
-					.len();
+					},
+				);
+				group_answers.sort();
+				group_answers.dedup();
+				let group_answers_count = group_answers.len();
 
 				// part 2
 				let member_answers = group
 					.split_whitespace()
-					.map(|answers| answers.chars().collect::<HashSet<char>>())
-					.collect::<Vec<HashSet<char>>>();
+					.map(|answers| answers.bytes().collect::<HashSet<_>>())
+					.collect::<Vec<_>>();
 
 				let group_all_yes_answers_count = member_answers[1..]
 					.iter()
