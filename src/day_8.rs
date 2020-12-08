@@ -57,8 +57,12 @@ impl ChallengeT for Challenge {
 		for (i, (inst, number)) in instructions.iter().enumerate() {
 			if *inst == InstructionType::Jmp || *inst == InstructionType::Nop {
 				match inst {
-					InstructionType::Nop => modified_instructions[i] = (InstructionType::Jmp, *number),
-					InstructionType::Jmp => modified_instructions[i] = (InstructionType::Nop, *number),
+					InstructionType::Nop => {
+						modified_instructions[i] = (InstructionType::Jmp, *number)
+					}
+					InstructionType::Jmp => {
+						modified_instructions[i] = (InstructionType::Nop, *number)
+					}
 					_ => (),
 				}
 				let res = run_instructions(&modified_instructions);
@@ -71,7 +75,7 @@ impl ChallengeT for Challenge {
 		}
 		Self {
 			part_1_answer: broken_acc.unwrap_err(),
-			part_2_answer: final_acc
+			part_2_answer: final_acc,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -110,7 +114,7 @@ fn run_instructions(instructions: &Vec<(InstructionType, i32)>) -> Result<i32, i
 			InstructionType::Acc => {
 				index += 1;
 				acc += inst_value;
-			},
+			}
 			InstructionType::Jmp => index += inst_value,
 			InstructionType::Nop => index += 1,
 		}
