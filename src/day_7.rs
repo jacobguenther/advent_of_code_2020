@@ -49,8 +49,9 @@ impl ChallengeT for Challenge {
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let mut bags_that_contain_gold_bag = 0;
+		let mut cache = HashMap::new();
 		for (bag, _) in self.parsed_input.clone() {
-			if contains_gold(&bag, &self.parsed_input, &mut HashMap::new()) {
+			if contains_gold(&bag, &self.parsed_input, &mut cache) {
 				bags_that_contain_gold_bag += 1;
 			}
 		}
