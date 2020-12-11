@@ -33,6 +33,7 @@ use common::ChallengeT;
 
 pub mod day_1;
 pub mod day_10;
+pub mod day_11;
 pub mod day_2;
 pub mod day_3;
 pub mod day_4;
@@ -60,7 +61,7 @@ pub fn main() {
 				"8" => day_8::Challenge::print_result(),
 				"9" => day_9::Challenge::print_result(),
 				"10" => day_10::Challenge::print_result(),
-
+				"11" => day_11::Challenge::print_result(),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -81,6 +82,7 @@ fn all() {
 	day_8::Challenge::print_result();
 	day_9::Challenge::print_result();
 	day_10::Challenge::print_result();
+	day_11::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(
