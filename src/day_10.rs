@@ -23,32 +23,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-19
-16
-15
-12
-11
-10
-7
-6
-5
-4
-1
-*/
-/*
-3
-1
-3
-1
-1
-3
-1
-1
-1
-3
-*/
-
 use super::common::ChallengeT;
 use std::collections::HashMap;
 
@@ -99,14 +73,12 @@ fn find_permutations(adapters: &[usize], cache: &mut HashMap<usize, usize>) -> u
 			.iter()
 			.take_while(|a| *a - first <= 3)
 			.enumerate()
-			.map(|(i, val)| {
-				match cache.get(val) {
-					Some(v) => *v,
-					None => {
-						let partial_count = find_permutations(&rest[i..], cache);
-						cache.insert(*val, partial_count);
-						partial_count
-					}
+			.map(|(i, val)| match cache.get(val) {
+				Some(v) => *v,
+				None => {
+					let partial_count = find_permutations(&rest[i..], cache);
+					cache.insert(*val, partial_count);
+					partial_count
 				}
 			})
 			.sum(),
