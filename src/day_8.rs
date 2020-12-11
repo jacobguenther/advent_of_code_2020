@@ -93,7 +93,7 @@ enum InstructionType {
 	Nop,
 }
 
-fn run_instructions(instructions: &Vec<(InstructionType, i32)>) -> Result<i32, i32> {
+fn run_instructions(instructions: &[(InstructionType, i32)]) -> Result<i32, i32> {
 	let mut already_ran = vec![false; instructions.len()];
 	let mut acc = 0;
 	let mut index: i32 = 0;

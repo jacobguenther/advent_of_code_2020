@@ -28,8 +28,7 @@ use std::collections::HashMap;
 use super::common::ChallengeT;
 
 pub struct Challenge {
-	part_1_answer: usize,
-	part_2_answer: usize,
+	parsed_input: HashMap<&'static str, Vec<(&'static str, usize)>>,
 }
 impl ChallengeT for Challenge {
 	type Output1 = usize;
@@ -39,30 +38,26 @@ impl ChallengeT for Challenge {
 		7
 	}
 	fn new() -> Self {
-		let p1 = include_str!("../inputs/day_7.txt")
+		let parsed_input = include_str!("../inputs/day_7.txt")
 			.lines()
 			.map(|line| parse_line(line))
 			.collect::<HashMap<&str, Vec<(&str, usize)>>>();
 
-		let mut bags_that_contain_gold_bag = 0;
-		for (bag, _) in p1.clone() {
-			if contains_gold(&bag, &p1) {
-				bags_that_contain_gold_bag += 1;
-			}
-		}
-
-		let bags_in_gold_bag = count_bags_in("shiny gold", &p1);
-
 		Self {
-			part_1_answer: bags_that_contain_gold_bag,
-			part_2_answer: bags_in_gold_bag,
+			parsed_input: parsed_input
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		self.part_1_answer
+		let mut bags_that_contain_gold_bag = 0;
+		for (bag, _) in self.parsed_input.clone() {
+			if contains_gold(&bag, &self.parsed_input, &mut HashMap::new()) {
+				bags_that_contain_gold_bag += 1;
+			}
+		}
+		bags_that_contain_gold_bag
 	}
 	fn part_2(&self) -> Self::Output2 {
-		self.part_2_answer
+		count_bags_in("shiny gold", &self.parsed_input)
 	}
 }
 
@@ -99,7 +94,12 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 	(color, rules)
 }
 
-fn contains_gold(current: &str, bags: &HashMap<&str, Vec<(&str, usize)>>) -> bool {
+fn contains_gold(current: &str, bags: &HashMap<&'static str, Vec<(&'static str, usize)>>, cache: &mut HashMap<&str, bool>) -> bool {
+	match cache.get(current) {
+		Some(val) => return *val,
+		_ => (),
+	}
+
 	let current_info = bags.get(current).unwrap();
 	let current_contains_gold = current_info
 		.iter()
@@ -109,9 +109,12 @@ fn contains_gold(current: &str, bags: &HashMap<&str, Vec<(&str, usize)>>) -> boo
 	if current_contains_gold {
 		return true;
 	} else {
-		for rule in current_info {
-			if contains_gold(&rule.0, bags) {
+		for (bag, _) in current_info {
+			if contains_gold(*bag, bags, cache) {
+				cache.insert(*bag, true);
 				return true;
+			} else {
+				cache.insert(*bag, false);
 			}
 		}
 		return false;
@@ -140,6 +143,14 @@ mod tests {
 		assert_eq!(Challenge::new().part_2(), 41559);
 	}
 
+	#[bench]
+	fn part_1_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_1())
+	}
+	#[bench]
+	fn part_2_bench(b: &mut Bencher) {
+		b.iter(|| Challenge::new().part_2())
+	}
 	#[bench]
 	fn both(b: &mut Bencher) {
 		b.iter(|| {
