@@ -44,7 +44,7 @@ impl ChallengeT for Challenge {
 			.collect::<HashMap<&str, Vec<(&str, usize)>>>();
 
 		Self {
-			parsed_input: parsed_input
+			parsed_input: parsed_input,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -95,7 +95,11 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 	(color, rules)
 }
 
-fn contains_gold(current: &str, bags: &HashMap<&'static str, Vec<(&'static str, usize)>>, cache: &mut HashMap<&str, bool>) -> bool {
+fn contains_gold(
+	current: &str,
+	bags: &HashMap<&'static str, Vec<(&'static str, usize)>>,
+	cache: &mut HashMap<&str, bool>,
+) -> bool {
 	match cache.get(current) {
 		Some(val) => return *val,
 		_ => (),
