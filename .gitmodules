@@ -1,0 +1,3 @@
+[submodule]
+	path = chinese_remainder_theorem
+	url = https://github.com/jacobguenther/chinese_remainder_theorem.git
