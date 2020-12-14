@@ -1,6 +1,3 @@
-[submodule]
-	path = chinese_remainder_theorem
-	url = https://github.com/jacobguenther/chinese_remainder_theorem
 [submodule "src/chinese_remainder_theorem"]
 	path = src/chinese_remainder_theorem
 	url = https://github.com/jacobguenther/chinese_remainder_theorem
