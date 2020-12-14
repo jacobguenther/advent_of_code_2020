@@ -32,6 +32,9 @@ impl<T> Vec2<T> {
 	pub fn new(x: T, y: T) -> Self {
 		Self { x: x, y: y }
 	}
+	pub fn swap(&mut self) {
+		std::mem::swap(&mut self.x, &mut self.y);
+	}
 }
 impl Default for Vec2<i32> {
 	fn default() -> Self {
