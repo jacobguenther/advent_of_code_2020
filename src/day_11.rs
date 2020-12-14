@@ -66,7 +66,7 @@ impl ChallengeT for Challenge {
 		let mut current = self.parsed_input.clone();
 		while previous != current {
 			previous = current;
-			current = step_map(&previous, &p1);
+			current = step_map(&previous, &p1_adjacency);
 		}
 		count_seats(&current)
 	}
@@ -75,7 +75,7 @@ impl ChallengeT for Challenge {
 		let mut current = self.parsed_input.clone();
 		while previous != current {
 			previous = current;
-			current = step_map(&previous, &p2);
+			current = step_map(&previous, &p2_adjacency);
 		}
 		count_seats(&current)
 	}
@@ -95,7 +95,7 @@ fn step_map(
 	}
 	new
 }
-fn p1(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
+fn p1_adjacency(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
 	let width = current.first().unwrap().len();
 	let height = current.len();
 	let adjacent_filled = steps().iter().fold(0, |mut acc, (dx, dy)| {
@@ -115,7 +115,7 @@ fn p1(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: us
 		new[y][x] = Tile::Empty;
 	}
 }
-fn p2(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
+fn p2_adjacency(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
 	let mut visible_filled_seats = 0;
 	for (dx, dy) in steps() {
 		let (mut px, mut py) = (x as i32, y as i32);
