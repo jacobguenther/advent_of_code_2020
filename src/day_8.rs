@@ -64,10 +64,9 @@ impl ChallengeT for Challenge {
 						modified_instructions[i] = (InstructionType::Nop, *number)
 					}
 					_ => (),
-				}
-				let res = run_instructions(&modified_instructions);
-				if res.is_ok() {
-					final_acc = res.unwrap();
+				};
+				if let Ok(result) = run_instructions(&modified_instructions) {
+					final_acc = result;
 					break;
 				}
 				modified_instructions[i] = (*inst, *number);
