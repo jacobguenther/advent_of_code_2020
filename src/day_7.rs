@@ -66,30 +66,29 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 	let mut iter = line.split(" bags ");
 	let color = iter.next().unwrap();
 	let rest = iter.next().unwrap();
-	let mut rules = Vec::with_capacity(iter.count());
+	let mut rules = Vec::new();
 
-	for rule in rest[8..].split(", ") {
-		if rule == "no other bags." {
-			break;
-		}
-		let mut numbers_digits = 0;
-		for c in rule.chars() {
-			if c.is_ascii_digit() {
-				numbers_digits += 1;
-			} else {
-				break;
+	if !rest.starts_with("contain no") {
+		for rule in rest[8..].split(", ") {
+			let mut numbers_digits = 0;
+			for c in rule.chars() {
+				if c.is_ascii_digit() {
+					numbers_digits += 1;
+				} else {
+					break;
+				}
 			}
-		}
-		let bag_count = rule[..(numbers_digits)].parse::<usize>().unwrap();
+			let bag_count = rule[..(numbers_digits)].parse::<usize>().unwrap();
 
-		let rule_color = if rule.ends_with(".") {
-			rule[(numbers_digits + 1)..(rule.len() - 5)] // remove " bags." and " bag."
-				.trim()
-		} else {
-			rule[(numbers_digits + 1)..(rule.len() - 4)] // remove " bags" and " bag"
-				.trim()
-		};
-		rules.push((rule_color, bag_count));
+			let rule_color = if rule.ends_with(".") {
+				rule[(numbers_digits + 1)..(rule.len() - 5)] // remove " bags." and " bag."
+					.trim()
+			} else {
+				rule[(numbers_digits + 1)..(rule.len() - 4)] // remove " bags" and " bag"
+					.trim()
+			};
+			rules.push((rule_color, bag_count));
+		}
 	}
 
 	(color, rules)
