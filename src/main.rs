@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern crate test;
 
 use std::env::args;
+use std::time::Instant;
 
 pub mod common;
 use common::ChallengeT;
@@ -37,6 +38,7 @@ pub mod day_11;
 pub mod day_12;
 pub mod day_13;
 pub mod day_14;
+pub mod day_15;
 pub mod day_2;
 pub mod day_3;
 pub mod day_4;
@@ -54,27 +56,37 @@ pub fn main() {
 			match arg.as_str() {
 				a if a.starts_with("target") => (),
 				"all" => all(),
-				"1" => day_1::Challenge::print_result(),
-				"2" => day_2::Challenge::print_result(),
-				"3" => day_3::Challenge::print_result(),
-				"4" => day_4::Challenge::print_result(),
-				"5" => day_5::Challenge::print_result(),
-				"6" => day_6::Challenge::print_result(),
-				"7" => day_7::Challenge::print_result(),
-				"8" => day_8::Challenge::print_result(),
-				"9" => day_9::Challenge::print_result(),
-				"10" => day_10::Challenge::print_result(),
-				"11" => day_11::Challenge::print_result(),
-				"12" => day_12::Challenge::print_result(),
-				"13" => day_13::Challenge::print_result(),
-				"14" => day_14::Challenge::print_result(),
+				"1" => bench(&day_1::Challenge::print_result),
+				"2" => bench(&day_2::Challenge::print_result),
+				"3" => bench(&day_3::Challenge::print_result),
+				"4" => bench(&day_4::Challenge::print_result),
+				"5" => bench(&day_5::Challenge::print_result),
+				"6" => bench(&day_6::Challenge::print_result),
+				"7" => bench(&day_7::Challenge::print_result),
+				"8" => bench(&day_8::Challenge::print_result),
+				"9" => bench(&day_9::Challenge::print_result),
+				"10" => bench(&day_10::Challenge::print_result),
+				"11" => bench(&day_11::Challenge::print_result),
+				"12" => bench(&day_12::Challenge::print_result),
+				"13" => bench(&day_13::Challenge::print_result),
+				"14" => bench(&day_14::Challenge::print_result),
+				"15" => bench(&day_15::Challenge::print_result),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
 	}
 }
+fn bench(day: &dyn Fn() -> ()) {
+	let now = Instant::now();
+	day();
+	let elapsed = now.elapsed();
+	println!(
+		"Estemated Time: {}ms or {}ns",
+		elapsed.as_millis(),
+		elapsed.as_nanos()
+	);
+}
 fn all() {
-	use std::time::Instant;
 	let now = Instant::now();
 
 	day_1::Challenge::print_result();
@@ -92,6 +104,7 @@ fn all() {
 	day_12::Challenge::print_result();
 	day_13::Challenge::print_result();
 	day_14::Challenge::print_result();
+	day_15::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(
