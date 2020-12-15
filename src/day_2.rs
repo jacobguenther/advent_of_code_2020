@@ -56,15 +56,19 @@ impl ChallengeT for Challenge {
 		self.parsed_lines
 			.iter()
 			.filter(|(first_pos, second_pos, letter, password)| {
-				let (mut first_letter, mut second_letter) = (' ', ' ');
 				let (first_i, second_i) = (first_pos - 1, second_pos - 1);
-				for (i, c) in password[0..*second_pos].chars().enumerate() {
-					if first_i == i {
-						first_letter = c;
-					} else if second_i == i {
-						second_letter = c;
-					}
-				}
+				let [first_letter, second_letter] = password[0..*second_pos]
+					.chars()
+					.enumerate()
+					.fold([' ', ' '], |[first_letter, second_letter], (i, c)| {
+						if i == first_i {
+							[c, second_letter]
+						} else if i == second_i {
+							[first_letter, c]
+						} else {
+							[first_letter, second_letter]
+						}
+					});
 				first_letter != second_letter
 					&& (*letter == first_letter || *letter == second_letter)
 			})
