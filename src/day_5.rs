@@ -79,10 +79,10 @@ impl ChallengeT for Challenge {
 }
 
 fn get_id(line: &str) -> usize {
-	line.chars().fold(0, |acc, c| {
+	line.bytes().fold(0, |acc, b| {
 		acc * 2
-			+ match c {
-				'B' | 'R' => 1,
+			+ match b {
+				c if c == 'B' as u8 || c == 'R' as u8 => 1,
 				_ => 0,
 			}
 	})
