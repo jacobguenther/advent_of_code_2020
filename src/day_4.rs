@@ -42,18 +42,19 @@ impl ChallengeT for Challenge {
 			.map(|with_whitespaces| with_whitespaces.replace(char::is_whitespace, ":"))
 			.fold([0, 0], |acc: [usize; 2], passport_string| {
 				let key_value = passport_string.split(':').collect::<Vec<&str>>();
-				let [partial_1, partial_2] = key_value.iter().zip(&key_value[1..]).fold(
-					[Partial::default(), Partial::default()],
-					|acc, (key, value)| {
-						[
-							to_partial_1(&acc[0], key),
-							to_partial_2(&acc[1], key, value),
-						]
-					},
-				);
+				let [passport_data_1, passport_data_2] =
+					key_value.iter().zip(&key_value[1..]).fold(
+						[PassportData::default(), PassportData::default()],
+						|acc, (key, value)| {
+							[
+								to_passport_data_1(&acc[0], key),
+								to_passport_data_2(&acc[1], key, value),
+							]
+						},
+					);
 				[
-					acc[0] + partial_1.is_valid() as usize,
-					acc[1] + partial_2.is_valid() as usize,
+					acc[0] + passport_data_1.is_valid() as usize,
+					acc[1] + passport_data_2.is_valid() as usize,
 				]
 			});
 
@@ -69,8 +70,8 @@ impl ChallengeT for Challenge {
 		self.part_2_result
 	}
 }
-fn to_partial_1(partial: &Partial, key: &str) -> Partial {
-	let mut new = partial.clone();
+fn to_passport_data_1(passport_data: &PassportData, key: &str) -> PassportData {
+	let mut new = passport_data.clone();
 	match key {
 		"byr" => new.birth_year = true,
 		"iyr" => new.issue_year = true,
@@ -83,8 +84,8 @@ fn to_partial_1(partial: &Partial, key: &str) -> Partial {
 	}
 	new
 }
-fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
-	let mut new = partial.clone();
+fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> PassportData {
+	let mut new = passport_data.clone();
 	match key {
 		"byr" => {
 			new.birth_year = {
@@ -108,32 +109,21 @@ fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 			new.height = {
 				let len = value.len();
 				match *&value[..(len - 2)].parse::<usize>() {
-					Ok(n) => {
-						if value.trim().ends_with("cm") {
-							149 < n && n < 194
-						} else if value.trim().ends_with("in") {
-							58 < n && n < 77
-						} else {
-							false
-						}
-					}
+					Ok(n) => match &value[(len - 2)..] {
+						"cm" => 149 < n && n < 194,
+						"in" => 58 < n && n < 77,
+						_ => false,
+					},
 					Err(_) => false,
 				}
 			}
 		}
 		"hcl" => {
 			new.hair_color = {
-				if value.len() != 7 || value.chars().nth(0).unwrap() != '#' {
+				if value.len() != 7 || value.bytes().nth(0).unwrap() != '#' as u8 {
 					false
 				} else {
-					let mut temp = true;
-					for c in value[1..].chars() {
-						if !c.is_ascii_hexdigit() {
-							temp = false;
-							break;
-						}
-					}
-					temp
+					u32::from_str_radix(&value[1..], 16).is_ok()
 				}
 			}
 		}
@@ -148,14 +138,7 @@ fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 				if value.len() != 9 {
 					false
 				} else {
-					let mut are_digits = true;
-					for c in value.chars() {
-						if !c.is_ascii_digit() {
-							are_digits = false;
-							break;
-						}
-					}
-					are_digits
+					value.parse::<u32>().is_ok()
 				}
 			}
 		}
@@ -164,7 +147,7 @@ fn to_partial_2(partial: &Partial, key: &str, value: &str) -> Partial {
 	new
 }
 #[derive(Debug, Copy, Clone)]
-struct Partial {
+struct PassportData {
 	birth_year: bool,
 	issue_year: bool,
 	experation_year: bool,
@@ -173,7 +156,7 @@ struct Partial {
 	eye_color: bool,
 	passport_id: bool,
 }
-impl Default for Partial {
+impl Default for PassportData {
 	fn default() -> Self {
 		Self {
 			birth_year: false,
@@ -186,7 +169,7 @@ impl Default for Partial {
 		}
 	}
 }
-impl Partial {
+impl PassportData {
 	fn is_valid(&self) -> bool {
 		self.birth_year
 			&& self.issue_year
