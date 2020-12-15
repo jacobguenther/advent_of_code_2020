@@ -80,7 +80,7 @@ impl ChallengeT for Challenge {
 		let (_, bus_id) = buses[0];
 		let first_bus = bus_id as u128;
 		loop {
-			if part_2_result%first_bus == 0 {
+			if part_2_result % first_bus == 0 {
 				break;
 			}
 			part_2_result += modulus;
