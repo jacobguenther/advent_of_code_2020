@@ -1,4 +1,4 @@
-// File: day_template.rs
+// File: day_n.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -23,52 +23,44 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::{
-	ChallengeT,
-};
+use std::collections::HashMap;
+use std::collections::HashSet;
+
+use super::common::*;
+
 pub struct Challenge {
-	input: &'static str,
+	parsed_input: Vec<&'static str>,
 }
 impl ChallengeT for Challenge {
 	type Output1 = usize;
 	type Output2 = usize;
 
 	fn day() -> u8 {
-		1
+		n
 	}
 	fn new() -> Self {
-		let input = nclude_str!("../inputs/day_1.txt");
+		let parsed_input = include_str!("../inputs/day_n.txt")
+			.lines()
+			.filter_map(|line| {
+				None
+			})
+			.collect();
 		Self {
-			input: input,
+			parsed_input: parsed_input,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		self.input
-			.lines()
-			.filter(|line| parse_line(line))
-			.count()
+		0
 	}
 	fn part_2(&self) -> Self::Output2 {
-		self.input
-			.lines()
-			.filter(|line| parse_line(line))
-			.count()
+		0
 	}
-}
-fn parse_line(line: &str) -> bool {
-	false
 }
 
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
-	use crate::common::{
-		ChallengeT,
-	};
-	use test::{
-		Bencher,
-		// black_box
-	};
+	use test::Bencher;
 
 	#[test]
 	fn part_1_test() {

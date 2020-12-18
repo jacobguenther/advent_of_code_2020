@@ -39,6 +39,9 @@ pub mod day_12;
 pub mod day_13;
 pub mod day_14;
 pub mod day_15;
+pub mod day_16;
+pub mod day_17;
+pub mod day_18;
 pub mod day_2;
 pub mod day_3;
 pub mod day_4;
@@ -71,6 +74,9 @@ pub fn main() {
 				"13" => bench(&day_13::Challenge::print_result),
 				"14" => bench(&day_14::Challenge::print_result),
 				"15" => bench(&day_15::Challenge::print_result),
+				"16" => bench(&day_16::Challenge::print_result),
+				"17" => bench(&day_17::Challenge::print_result),
+				"18" => bench(&day_18::Challenge::print_result),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -105,6 +111,9 @@ fn all() {
 	day_13::Challenge::print_result();
 	day_14::Challenge::print_result();
 	day_15::Challenge::print_result();
+	day_16::Challenge::print_result();
+	day_17::Challenge::print_result();
+	day_18::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(

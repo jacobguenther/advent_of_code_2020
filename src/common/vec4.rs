@@ -1,4 +1,4 @@
-// File: common/mod.rs
+// File: common/vec4.rs
 // Author: Jacob Guenther
 // Date: December 2020
 
@@ -23,43 +23,40 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-pub mod grid;
-pub mod vec2;
-pub mod vec3;
-pub mod vec4;
+use super::NeighborsT;
 
-use std::fmt;
-
-pub trait ChallengeT
-where
-	Self: Sized,
-{
-	type Output1: fmt::Display;
-	type Output2: fmt::Display;
-
-	fn print_result() {
-		println!("{}", Self::result_string());
-	}
-	fn result_string() -> String {
-		let challenge = Self::new();
-		format!(
-			"Day {}\n  part 1: {}\n  part 2: {}",
-			Self::day(),
-			challenge.part_1(),
-			challenge.part_2()
-		)
-	}
-
-	fn day() -> u8;
-
-	fn new() -> Self;
-	fn part_1(&self) -> Self::Output1;
-	fn part_2(&self) -> Self::Output2;
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd, Eq, Ord, Hash)]
+pub struct Vec4<T> {
+	pub x: T,
+	pub y: T,
+	pub z: T,
+	pub w: T,
 }
-
-pub trait NeighborsT
-where
-	Self: Sized,
-{
-	fn neighbors(&self) -> Vec<Self>;
+impl<T> Vec4<T> {
+	pub fn new(x: T, y: T, z: T, w: T) -> Self {
+		Self {
+			x: x,
+			y: y,
+			z: z,
+			w: w,
+		}
+	}
+}
+impl NeighborsT for Vec4<i32> {
+	fn neighbors(&self) -> Vec<Vec4<i32>> {
+		let mut neighbors = Vec::with_capacity(80);
+		for z in self.z - 1..self.z + 2 {
+			for x in self.x - 1..self.x + 2 {
+				for y in self.y - 1..self.y + 2 {
+					for w in self.w - 1..self.w + 2 {
+						let n = Vec4::new(x, y, z, w);
+						if n != *self {
+							neighbors.push(n);
+						}
+					}
+				}
+			}
+		}
+		neighbors
+	}
 }
