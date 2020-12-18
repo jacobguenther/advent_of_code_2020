@@ -43,9 +43,7 @@ impl ChallengeT for Challenge {
 			.map(|line| parse_line(line))
 			.collect::<HashMap<&str, Vec<(&str, usize)>>>();
 
-		Self {
-			parsed_input: parsed_input,
-		}
+		Self { parsed_input }
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let mut bags_that_contain_gold_bag = 0;
@@ -80,7 +78,7 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 			}
 			let bag_count = rule[..(numbers_digits)].parse::<usize>().unwrap();
 
-			let rule_color = if rule.ends_with(".") {
+			let rule_color = if rule.ends_with('.') {
 				rule[(numbers_digits + 1)..(rule.len() - 5)] // remove " bags." and " bag."
 					.trim()
 			} else {
@@ -99,19 +97,15 @@ fn contains_gold(
 	bags: &HashMap<&'static str, Vec<(&'static str, usize)>>,
 	cache: &mut HashMap<&str, bool>,
 ) -> bool {
-	match cache.get(current) {
-		Some(val) => return *val,
-		_ => (),
+	if let Some(val) = cache.get(current) {
+		return *val;
 	}
 
 	let current_info = bags.get(current).unwrap();
-	let current_contains_gold = current_info
-		.iter()
-		.find(|el| el.0 == "shiny gold")
-		.is_some();
+	let current_contains_gold = current_info.iter().any(|el| el.0 == "shiny gold");
 
 	if current_contains_gold {
-		return true;
+		true
 	} else {
 		for (bag, _) in current_info {
 			if contains_gold(*bag, bags, cache) {
@@ -121,7 +115,7 @@ fn contains_gold(
 				cache.insert(*bag, false);
 			}
 		}
-		return false;
+		false
 	}
 }
 fn count_bags_in(current: &str, bags: &HashMap<&str, Vec<(&str, usize)>>) -> usize {

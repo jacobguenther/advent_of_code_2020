@@ -49,11 +49,11 @@ where
 		let s = x * y;
 		let mut data = Vec::with_capacity(x);
 		for _ in 0..s {
-			data.push(default.clone());
+			data.push(*default);
 		}
 		Self {
 			size: Vec2::new(x, y),
-			data: data,
+			data,
 		}
 	}
 	#[inline(always)]
@@ -63,7 +63,7 @@ where
 	#[inline(always)]
 	fn set(&mut self, x: usize, y: usize, value: &T) {
 		let i = self.index(x, y);
-		self.data[i] = value.clone();
+		self.data[i] = *value;
 	}
 }
 
@@ -80,13 +80,13 @@ where
 		for _ in 0..y {
 			let mut row = Vec::with_capacity(x);
 			for _ in 0..x {
-				row.push(default.clone());
+				row.push(*default);
 			}
 			data.push(row);
 		}
 		Self {
 			size: Vec2::new(x, y),
-			data: data,
+			data,
 		}
 	}
 	#[inline(always)]
@@ -95,6 +95,6 @@ where
 	}
 	#[inline(always)]
 	fn set(&mut self, x: usize, y: usize, value: &T) {
-		self.data[y][x] = value.clone();
+		self.data[y][x] = *value;
 	}
 }

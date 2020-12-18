@@ -88,14 +88,14 @@ impl ChallengeT for Challenge {
 
 		Self {
 			part_1_result: best_bus * (lowest - ealiest_departure),
-			part_2_result: part_2_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
 		self.part_1_result
 	}
 	fn part_2(&self) -> Self::Output2 {
-		self.part_2_result.clone()
+		self.part_2_result
 	}
 }
 

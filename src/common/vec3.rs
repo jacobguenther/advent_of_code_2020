@@ -33,7 +33,7 @@ pub struct Vec3<T> {
 }
 impl<T> Vec3<T> {
 	pub fn new(x: T, y: T, z: T) -> Self {
-		Self { x: x, y: y, z: z }
+		Self { x, y, z }
 	}
 }
 impl NeighborsT for Vec3<i32> {
@@ -50,21 +50,5 @@ impl NeighborsT for Vec3<i32> {
 			}
 		}
 		neighbors
-	}
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn adjacent() {
-		let v = Vec3::<i32>::new(0, 0, 0);
-		let mut a = v.neighbors();
-		assert_eq!(a.len(), 26);
-		a.sort();
-		a.dedup();
-		assert_eq!(a.len(), 26);
-		println!("{:?}", a);
 	}
 }

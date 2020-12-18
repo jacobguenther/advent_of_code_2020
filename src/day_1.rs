@@ -42,7 +42,7 @@ impl ChallengeT for Challenge {
 			.map(|l| l.parse().unwrap())
 			.collect::<Vec<u32>>();
 		report.sort();
-		Self { report: report }
+		Self { report }
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let mut lower_i = 0;
@@ -51,12 +51,10 @@ impl ChallengeT for Challenge {
 			let lower = self.report[lower_i];
 			let upper = self.report[upper_i];
 			let sum = upper + lower;
-			if sum == 2020 {
-				return upper * lower;
-			} else if sum < 2020 {
-				lower_i += 1;
-			} else {
-				upper_i -= 1;
+			match sum {
+				2020 => return upper * lower,
+				s if s < 2020 => lower_i += 1,
+				_ => upper_i -= 1,
 			}
 		}
 	}
@@ -70,12 +68,10 @@ impl ChallengeT for Challenge {
 				let second = self.report[lower_i];
 				let third = self.report[upper_i];
 				let sum = first + second + third;
-				if sum == 2020 {
-					return first * second * third;
-				} else if sum < 2020 {
-					lower_i += 1;
-				} else {
-					upper_i -= 1;
+				match sum {
+					2020 => return first * second * third,
+					s if s < 2020 => lower_i += 1,
+					_ => upper_i -= 1,
 				}
 				if lower_i == upper_i {
 					break;

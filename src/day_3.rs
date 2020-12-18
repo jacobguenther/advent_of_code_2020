@@ -39,13 +39,14 @@ impl ChallengeT for Challenge {
 		3
 	}
 	fn new() -> Self {
+		// Note: '#' is 35
 		let tree_map = include_str!("../inputs/day_3.txt")
 			.lines()
-			.map(|line| line.bytes().map(|b| b == '#' as u8).collect())
-			.collect();
+			.map(|line| line.bytes().map(|b| b == 35).collect())
+			.collect::<Vec<_>>();
 		Self {
 			part_1_result: count_trees_hit(&tree_map, 3, 1),
-			tree_map: tree_map,
+			tree_map,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -60,7 +61,7 @@ impl ChallengeT for Challenge {
 		self.part_1_result * part_2_partial
 	}
 }
-fn count_trees_hit(tree_map: &TreeMap, step_x: usize, step_y: usize) -> usize {
+fn count_trees_hit(tree_map: &[Vec<bool>], step_x: usize, step_y: usize) -> usize {
 	let width = tree_map[0].len();
 	tree_map
 		.iter()

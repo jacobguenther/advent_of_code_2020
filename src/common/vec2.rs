@@ -30,7 +30,7 @@ pub struct Vec2<T> {
 }
 impl<T> Vec2<T> {
 	pub fn new(x: T, y: T) -> Self {
-		Self { x: x, y: y }
+		Self { x, y }
 	}
 	pub fn swap(&mut self) {
 		std::mem::swap(&mut self.x, &mut self.y);

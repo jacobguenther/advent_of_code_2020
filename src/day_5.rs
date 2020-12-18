@@ -56,13 +56,7 @@ impl ChallengeT for Challenge {
 		let (previous, _) = &filled_seat_ids[lowest..]
 			.iter()
 			.zip(&filled_seat_ids[(lowest + 1)..])
-			.find(|(previous, next)| {
-				if **previous + 1 != **next {
-					true
-				} else {
-					false
-				}
-			})
+			.find(|(previous, next)| **previous + 1 != **next)
 			.unwrap();
 
 		Self {
@@ -78,11 +72,12 @@ impl ChallengeT for Challenge {
 	}
 }
 
+// Note: 'B' is 66 and 'R' is 82
 fn get_id(line: &str) -> usize {
 	line.bytes().fold(0, |acc, b| {
 		acc * 2
 			+ match b {
-				c if c == 'B' as u8 || c == 'R' as u8 => 1,
+				c if c == 66 || c == 82 => 1,
 				_ => 0,
 			}
 	})

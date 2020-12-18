@@ -85,7 +85,7 @@ fn parse_line(line: &str) -> (usize, usize, char, &str) {
 		.for_each(|(i, s)| match i {
 			0 => min = s.parse().unwrap(),
 			1 => max = s.parse().unwrap(),
-			2 => letter = s.chars().nth(0).unwrap(),
+			2 => letter = s.chars().next().unwrap(),
 			3 => password = s,
 			_ => (),
 		});

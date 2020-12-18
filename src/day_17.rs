@@ -45,12 +45,11 @@ impl ChallengeT for Challenge {
 			.lines()
 			.enumerate()
 			.for_each(|(y, line)| {
-				line.bytes().enumerate().for_each(|(x, b)| match b {
-					a if a == '#' as u8 => {
+				line.bytes().enumerate().for_each(|(x, b)| {
+					if b == 35 {
 						active.insert(Vec3::<i32>::new(x as i32, y as i32, 0));
 						active_2.insert(Vec4::<i32>::new(x as i32, y as i32, 0, 0));
 					}
-					_ => (),
 				});
 			});
 
@@ -70,11 +69,7 @@ impl ChallengeT for Challenge {
 						let coord = Vec3::new(x, y, z);
 						let active_count = count_active_adjacent(&active, &coord);
 						match (active.get(&coord), active_count) {
-							(Some(_), 2) | (Some(_), 3) => {
-								next_active.insert(coord);
-								next_active.insert(Vec3::new(x, y, -z));
-							}
-							(None, 3) => {
+							(Some(_), 2) | (Some(_), 3) | (None, 3) => {
 								next_active.insert(coord);
 								next_active.insert(Vec3::new(x, y, -z));
 							}
@@ -84,13 +79,7 @@ impl ChallengeT for Challenge {
 							let coord = Vec4::new(x, y, z, w);
 							let active_count = count_active_adjacent(&active_2, &coord);
 							match (active_2.get(&coord), active_count) {
-								(Some(_), 2) | (Some(_), 3) => {
-									next_active_2.insert(coord);
-									next_active_2.insert(Vec4::new(x, y, z, -w));
-									next_active_2.insert(Vec4::new(x, y, -z, w));
-									next_active_2.insert(Vec4::new(x, y, -z, -w));
-								}
-								(None, 3) => {
+								(Some(_), 2) | (Some(_), 3) | (None, 3) => {
 									next_active_2.insert(coord);
 									next_active_2.insert(Vec4::new(x, y, z, -w));
 									next_active_2.insert(Vec4::new(x, y, -z, w));
@@ -138,7 +127,7 @@ mod tests {
 
 	#[test]
 	fn part_1_test() {
-		assert_eq!(Challenge::new().part_1(), 0);
+		assert_eq!(Challenge::new().part_1(), 218);
 	}
 	#[test]
 	fn part_2_test() {

@@ -106,9 +106,9 @@ impl ChallengeT for Challenge {
 		Self {
 			part_1_result: error_rate,
 			notes: Notes {
-				fields: fields,
-				my_ticket: my_ticket,
-				filtered_tickets: filtered_tickets,
+				fields,
+				my_ticket,
+				filtered_tickets,
 			},
 		}
 	}
@@ -120,9 +120,9 @@ impl ChallengeT for Challenge {
 		let width = self.notes.filtered_tickets[0].len();
 
 		let mut columns = vec![vec![0; height]; width];
-		for y in 0..height {
-			for x in 0..width {
-				columns[x][y] = self.notes.filtered_tickets[y][x];
+		for (y, col) in columns.iter_mut().enumerate() {
+			for (x, item) in col.iter_mut().enumerate() {
+				*item = self.notes.filtered_tickets[x][y];
 			}
 		}
 
@@ -170,18 +170,18 @@ fn bound_by(value: usize, range1: &Vec2<usize>, range2: &Vec2<usize>) -> bool {
 	(value >= range1.x && value <= range1.y) || (value >= range2.x && value <= range2.y)
 }
 fn find_order(
-	matches: &Vec<Vec<FieldName>>,
+	matches: &[Vec<FieldName>],
 	current: usize,
-	partial: &Vec<FieldName>,
+	partial: &[FieldName],
 ) -> Option<Vec<FieldName>> {
 	if current == matches.len() {
-		return Some(partial.clone());
+		return Some(partial.to_owned());
 	}
 	for option in matches[current].iter() {
 		if partial.contains(option) {
 			continue;
 		}
-		let mut param = partial.clone();
+		let mut param = partial.to_owned();
 		param.push(option);
 		if let Some(result) = find_order(matches, current + 1, &param) {
 			return Some(result);

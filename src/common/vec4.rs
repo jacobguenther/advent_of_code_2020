@@ -34,12 +34,7 @@ pub struct Vec4<T> {
 }
 impl<T> Vec4<T> {
 	pub fn new(x: T, y: T, z: T, w: T) -> Self {
-		Self {
-			x: x,
-			y: y,
-			z: z,
-			w: w,
-		}
+		Self { x, y, z, w }
 	}
 }
 impl NeighborsT for Vec4<i32> {

@@ -31,10 +31,10 @@ enum Tile {
 	Empty,
 	Filled,
 }
-type SeatMap = Vec<Vec<Tile>>;
+type MapRow = Vec<Tile>;
 
 pub struct Challenge {
-	parsed_input: Vec<Vec<Tile>>,
+	parsed_input: Vec<MapRow>,
 }
 impl ChallengeT for Challenge {
 	type Output1 = usize;
@@ -55,11 +55,9 @@ impl ChallengeT for Challenge {
 					})
 					.collect()
 			})
-			.collect::<Vec<Vec<Tile>>>();
+			.collect::<Vec<MapRow>>();
 
-		Self {
-			parsed_input: parsed_input,
-		}
+		Self { parsed_input }
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let mut previous = Vec::new();
@@ -81,10 +79,10 @@ impl ChallengeT for Challenge {
 	}
 }
 fn step_map(
-	current: &SeatMap,
-	adjacency_fn: &dyn Fn(&SeatMap, &Tile, &mut SeatMap, usize, usize) -> (),
-) -> SeatMap {
-	let mut new = current.clone();
+	current: &[MapRow],
+	adjacency_fn: &dyn Fn(&[MapRow], &Tile, &mut [MapRow], usize, usize),
+) -> Vec<MapRow> {
+	let mut new = current.to_owned();
 	for (y, row) in current.iter().enumerate() {
 		for (x, tile) in row.iter().enumerate() {
 			if *tile == Tile::Floor {
@@ -95,16 +93,15 @@ fn step_map(
 	}
 	new
 }
-fn p1_adjacency(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
+fn p1_adjacency(current: &[MapRow], current_tile: &Tile, new: &mut [MapRow], x: usize, y: usize) {
 	let width = current.first().unwrap().len();
 	let height = current.len();
 	let adjacent_filled = steps().iter().fold(0, |mut acc, (dx, dy)| {
 		let pos_x = (*dx + x as i32) as usize;
 		let pos_y = (*dy + y as i32) as usize;
 		if pos_x < width && pos_y < height {
-			match current[pos_y][pos_x] {
-				Tile::Filled => acc += 1,
-				_ => (),
+			if let Tile::Filled = current[pos_y][pos_x] {
+				acc += 1
 			}
 		}
 		acc
@@ -115,7 +112,7 @@ fn p1_adjacency(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: us
 		new[y][x] = Tile::Empty;
 	}
 }
-fn p2_adjacency(current: &SeatMap, current_tile: &Tile, new: &mut SeatMap, x: usize, y: usize) {
+fn p2_adjacency(current: &[MapRow], current_tile: &Tile, new: &mut [MapRow], x: usize, y: usize) {
 	let mut visible_filled_seats = 0;
 	for (dx, dy) in steps() {
 		let (mut px, mut py) = (x as i32, y as i32);
@@ -155,13 +152,12 @@ fn steps() -> &'static [(i32, i32); 8] {
 		(1, 1),
 	]
 }
-fn count_seats(current: &SeatMap) -> usize {
+fn count_seats(current: &[MapRow]) -> usize {
 	let mut total_filled = 0;
 	for row in current.iter() {
 		for tile in row {
-			match tile {
-				Tile::Filled => total_filled += 1,
-				_ => (),
+			if let Tile::Filled = tile {
+				total_filled += 1;
 			}
 		}
 	}

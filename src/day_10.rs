@@ -43,7 +43,7 @@ impl ChallengeT for Challenge {
 			.collect::<Vec<usize>>();
 		adapters.sort();
 
-		Self { adapters: adapters }
+		Self { adapters }
 	}
 	fn part_1(&self) -> Self::Output1 {
 		let [difference_1, difference_3] = self.adapters.iter().zip(&self.adapters[1..]).fold(

@@ -65,7 +65,7 @@ impl ChallengeT for Challenge {
 		}
 
 		Self {
-			nums: nums,
+			nums,
 			part_1_answer: error_num,
 		}
 	}

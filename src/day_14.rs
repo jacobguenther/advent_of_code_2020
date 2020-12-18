@@ -48,8 +48,8 @@ impl ChallengeT for Challenge {
 					mask_0s = 0;
 					mask_1s = 0;
 					for c in line.split("mask = ").nth(1).unwrap().chars() {
-						mask_0s = mask_0s << 1;
-						mask_1s = mask_1s << 1;
+						mask_0s <<= 1;
+						mask_1s <<= 1;
 						match c {
 							'0' => (),
 							'1' => {
@@ -80,6 +80,7 @@ impl ChallengeT for Challenge {
 		let mut mask = Vec::new();
 		let mut memory = HashMap::<u64, u64>::new();
 		let mut floating_bits_count = 0;
+		// Note: '0' is 48 and '1' is 49
 		include_str!("../inputs/day_14.txt")
 			.lines()
 			.for_each(|line| {
@@ -92,8 +93,8 @@ impl ChallengeT for Challenge {
 						.as_bytes()
 						.iter()
 						.map(|b| match b {
-							zero if *zero == '0' as u8 => 0,
-							one if *one == '1' as u8 => 1,
+							48 => 0,
+							49 => 1,
 							_ => {
 								floating_bits_count += 1;
 								2
@@ -126,7 +127,7 @@ impl ChallengeT for Challenge {
 		self.part_1_result
 	}
 	fn part_2(&self) -> Self::Output2 {
-		self.part_2_result.clone()
+		self.part_2_result
 	}
 }
 fn build_addresses(mask: &[u8], address: u64, current: u64, addresses: &mut Vec<u64>) {

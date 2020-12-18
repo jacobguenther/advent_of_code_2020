@@ -28,15 +28,15 @@ use super::common::ChallengeT;
 use std::collections::HashMap;
 
 // number, turn last spoken, turn spoken before last
-type NumbersSpoken = HashMap<usize, (usize, Option<usize>)>;
+type NumbersSpoken = HashMap<u32, (u32, Option<u32>)>;
 
 pub struct Challenge {
-	part_1_result: usize,
-	part_2_result: usize,
+	part_1_result: u32,
+	part_2_result: u32,
 }
 impl ChallengeT for Challenge {
-	type Output1 = usize;
-	type Output2 = usize;
+	type Output1 = u32;
+	type Output2 = u32;
 
 	fn day() -> u8 {
 		15
@@ -46,17 +46,17 @@ impl ChallengeT for Challenge {
 		let mut numbers_spoken = starting_numbers
 			.iter()
 			.enumerate()
-			.map(|(i, n)| (*n, (i, None)))
+			.map(|(i, n)| (*n, (i as u32, None)))
 			.collect::<NumbersSpoken>();
 
 		let part_1_result = van_eck_sequence(
 			&mut numbers_spoken,
 			*starting_numbers.last().unwrap(),
-			starting_numbers.len(),
+			starting_numbers.len() as u32,
 			2020,
 		);
 		Self {
-			part_1_result: part_1_result,
+			part_1_result,
 			part_2_result: van_eck_sequence(&mut numbers_spoken, part_1_result, 2020, 30_000_000),
 		}
 	}
@@ -69,10 +69,10 @@ impl ChallengeT for Challenge {
 }
 fn van_eck_sequence(
 	numbers_spoken: &mut NumbersSpoken,
-	last_spoken: usize,
-	start: usize,
-	nth: usize,
-) -> usize {
+	last_spoken: u32,
+	start: u32,
+	nth: u32,
+) -> u32 {
 	let mut previous_spoken = last_spoken;
 	let mut previous_spoken_index = start;
 	let mut previous_spoken_before = None;

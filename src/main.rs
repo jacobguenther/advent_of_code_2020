@@ -82,7 +82,7 @@ pub fn main() {
 		}
 	}
 }
-fn bench(day: &dyn Fn() -> ()) {
+fn bench(day: &dyn Fn()) {
 	let now = Instant::now();
 	day();
 	let elapsed = now.elapsed();
@@ -130,6 +130,6 @@ mod tests {
 
 	#[bench]
 	fn bench_all(b: &mut Bencher) {
-		b.iter(|| all())
+		b.iter(all)
 	}
 }

@@ -37,8 +37,7 @@ impl ChallengeT for Challenge {
 		18
 	}
 	fn new() -> Self {
-		let input = include_str!("../inputs/day_18.txt");
-		let [part_1_result, part_2_result] = input
+		let [part_1_result, part_2_result] = include_str!("../inputs/day_18.txt")
 			.lines()
 			.map(|line| {
 				let mut parser = Parser::new(line.as_bytes());
@@ -49,8 +48,8 @@ impl ChallengeT for Challenge {
 			});
 
 		Self {
-			part_1_result: part_1_result,
-			part_2_result: part_2_result,
+			part_1_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -68,7 +67,7 @@ struct Parser {
 impl Parser {
 	pub fn new(lexemes: &'static [u8]) -> Self {
 		Self {
-			lexemes: lexemes,
+			lexemes,
 			current_i: 0,
 		}
 	}
@@ -85,14 +84,12 @@ impl Parser {
 	fn parse_expression_1(&mut self) -> Option<Expression1> {
 		let mut expression =
 			Expression1::Atom(self.parse_atom::<Expression1>(&Self::parse_expression_1)?);
-		loop {
-			let is_add = match self.current_lexeme() {
-				Some(op) => match op {
-					p if *p == '+' as u8 => true,
-					m if *m == '*' as u8 => false,
-					_ => break,
-				},
-				None => break,
+		while let Some(op) = self.current_lexeme() {
+			// Note: '+' is 43 and '*' is 42
+			let is_add = match op {
+				43 => true,
+				42 => false,
+				_ => break,
 			};
 			self.step_lexemes();
 			let next_atom = self
@@ -107,14 +104,12 @@ impl Parser {
 	}
 	fn parse_expression_2(&mut self) -> Option<Expression2> {
 		let mut expression = Expression2::Factor(self.parse_factor_2()?);
-		loop {
-			match self.current_lexeme() {
-				Some(op) => match op {
-					m if *m == '*' as u8 => false,
-					_ => break,
-				},
-				None => break,
-			};
+		while let Some(op) = self.current_lexeme() {
+			// Note: '*' is 42
+			match op {
+				42 => (),
+				_ => break,
+			}
 			self.step_lexemes();
 			expression = Expression2::Mul(Box::new(expression), self.parse_factor_2().unwrap());
 		}
@@ -122,14 +117,12 @@ impl Parser {
 	}
 	fn parse_factor_2(&mut self) -> Option<Factor> {
 		let mut factor = Factor::Atom(self.parse_atom::<Expression2>(&Self::parse_expression_2)?);
-		loop {
-			match self.current_lexeme() {
-				Some(op) => match op {
-					a if *a == '+' as u8 => false,
-					_ => break,
-				},
-				None => break,
-			};
+		while let Some(op) = self.current_lexeme() {
+			// Note: '+' is 43
+			match op {
+				43 => (),
+				_ => break,
+			}
 			self.step_lexemes();
 			factor = Factor::Add(
 				Box::new(factor),
@@ -143,8 +136,9 @@ impl Parser {
 		&mut self,
 		parse_expression: &dyn Fn(&mut Self) -> Option<T>,
 	) -> Option<Atom<T>> {
+		// Note '(' is 40
 		match self.current_lexeme()? {
-			p if *p == '(' as u8 => {
+			40 => {
 				self.step_lexemes();
 				let expresssion = parse_expression(self)?;
 				self.step_lexemes();
@@ -160,7 +154,8 @@ impl Parser {
 
 	fn current_lexeme(&mut self) -> Option<&u8> {
 		let l = self.lexemes.get(self.current_i)?;
-		if *l == ' ' as u8 {
+		// Note: ' ' is 32
+		if *l == 32 {
 			self.step_lexemes();
 			self.current_lexeme()
 		} else {

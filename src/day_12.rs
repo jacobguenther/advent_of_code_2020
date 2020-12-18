@@ -141,7 +141,7 @@ enum Direction {
 }
 impl Direction {
 	fn rotate_left(&self, amount: isize) -> Self {
-		let mut new = self.clone();
+		let mut new = *self;
 		for _ in 0..amount / 90 {
 			new = match new {
 				Direction::North(d) => Direction::West(d),
@@ -154,7 +154,7 @@ impl Direction {
 		new
 	}
 	fn rotate_right(&self, amount: isize) -> Self {
-		let mut new = self.clone();
+		let mut new = *self;
 		for _ in 0..amount / 90 {
 			new = match new {
 				Direction::North(d) => Direction::East(d),

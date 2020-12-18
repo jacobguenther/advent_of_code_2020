@@ -59,8 +59,8 @@ impl ChallengeT for Challenge {
 			});
 
 		Self {
-			part_1_result: part_1_result,
-			part_2_result: part_2_result,
+			part_1_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -71,7 +71,7 @@ impl ChallengeT for Challenge {
 	}
 }
 fn to_passport_data_1(passport_data: &PassportData, key: &str) -> PassportData {
-	let mut new = passport_data.clone();
+	let mut new = *passport_data;
 	match key {
 		"byr" => new.birth_year = true,
 		"iyr" => new.issue_year = true,
@@ -85,7 +85,7 @@ fn to_passport_data_1(passport_data: &PassportData, key: &str) -> PassportData {
 	new
 }
 fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> PassportData {
-	let mut new = passport_data.clone();
+	let mut new = *passport_data;
 	match key {
 		"byr" => {
 			new.birth_year = {
@@ -108,7 +108,7 @@ fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> P
 		"hgt" => {
 			new.height = {
 				let len = value.len();
-				match *&value[..(len - 2)].parse::<usize>() {
+				match value[..(len - 2)].parse::<usize>() {
 					Ok(n) => match &value[(len - 2)..] {
 						"cm" => 149 < n && n < 194,
 						"in" => 58 < n && n < 77,
@@ -118,9 +118,10 @@ fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> P
 				}
 			}
 		}
+		// Note: '#' is 35
 		"hcl" => {
 			new.hair_color = {
-				if value.len() != 7 || value.bytes().nth(0).unwrap() != '#' as u8 {
+				if value.len() != 7 || value.bytes().next().unwrap() != 35 {
 					false
 				} else {
 					u32::from_str_radix(&value[1..], 16).is_ok()
@@ -128,10 +129,7 @@ fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> P
 			}
 		}
 		"ecl" => {
-			new.eye_color = match value {
-				"amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
-				_ => false,
-			}
+			new.eye_color = matches!(value, "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth")
 		}
 		"pid" => {
 			new.passport_id = {
