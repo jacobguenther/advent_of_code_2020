@@ -35,7 +35,7 @@ impl ChallengeT for Challenge {
 	type Output2 = usize;
 
 	fn day() -> u8 {
-		20
+		23
 	}
 	fn new() -> Self {
 		let input = [3, 6, 8, 1, 9, 5, 7, 4, 2];
@@ -71,7 +71,6 @@ impl ChallengeT for Challenge {
 		let max = 1_000_000;
 		let moves = 10_000_000;
 		let mut current = *input.first().unwrap();
-		println!();
 		(0..moves).for_each(|_| {
 			current = do_move_2(&mut cups, current as usize, max);
 		});
