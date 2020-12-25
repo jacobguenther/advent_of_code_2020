@@ -60,7 +60,8 @@ pub fn main() {
 		for arg in args() {
 			match arg.as_str() {
 				a if a.starts_with("target") => (),
-				"all" => all(),
+				"all" => bench(&all),
+				"threaded" => bench(&all_threaded),
 				"1" => bench(&day_1::Challenge::print_result),
 				"2" => bench(&day_2::Challenge::print_result),
 				"3" => bench(&day_3::Challenge::print_result),
@@ -86,9 +87,9 @@ pub fn main() {
 		}
 	}
 }
-fn bench(day: &dyn Fn()) {
+fn bench(solution: &dyn Fn()) {
 	let now = Instant::now();
-	day();
+	solution();
 	let elapsed = now.elapsed();
 	println!(
 		"Estemated Time: {}ms or {}ns",
@@ -97,6 +98,37 @@ fn bench(day: &dyn Fn()) {
 	);
 }
 fn all() {
+	let now = Instant::now();
+
+	day_1::Challenge::print_result();
+	day_2::Challenge::print_result();
+	day_3::Challenge::print_result();
+	day_4::Challenge::print_result();
+	day_5::Challenge::print_result();
+	day_6::Challenge::print_result();
+	day_7::Challenge::print_result();
+	day_8::Challenge::print_result();
+	day_9::Challenge::print_result();
+	day_10::Challenge::print_result();
+	day_11::Challenge::print_result();
+	day_12::Challenge::print_result();
+	day_13::Challenge::print_result();
+	day_14::Challenge::print_result();
+	day_15::Challenge::print_result();
+	day_16::Challenge::print_result();
+	day_17::Challenge::print_result();
+	day_18::Challenge::print_result();
+	day_19::Challenge::print_result();
+	day_23::Challenge::print_result();
+
+	let elapsed = now.elapsed();
+	println!(
+		"Estemated Time: {}ms or {}ns",
+		elapsed.as_millis(),
+		elapsed.as_nanos()
+	);
+}
+fn all_threaded() {
 	let now = Instant::now();
 
 	let handle_15 = std::thread::spawn(|| {
@@ -121,7 +153,6 @@ fn all() {
 	day_1::Challenge::print_result();
 	day_2::Challenge::print_result();
 	day_3::Challenge::print_result();
-	day_4::Challenge::print_result();
 	day_4::Challenge::print_result();
 	day_5::Challenge::print_result();
 	day_6::Challenge::print_result();
