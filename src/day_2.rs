@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::common::ChallengeT;
 
 pub struct Challenge {
-	parsed_lines: Vec<(usize, usize, char, &'static str)>,
+	parsed_lines: Vec<(u16, u16, char, &'static str)>,
 }
 impl ChallengeT for Challenge {
 	type Output1 = usize;
@@ -56,8 +56,8 @@ impl ChallengeT for Challenge {
 		self.parsed_lines
 			.iter()
 			.filter(|(first_pos, second_pos, letter, password)| {
-				let (first_i, second_i) = (first_pos - 1, second_pos - 1);
-				let [first_letter, second_letter] = password[0..*second_pos]
+				let (first_i, second_i) = ((first_pos - 1) as usize, (second_pos - 1) as usize);
+				let [first_letter, second_letter] = password[0..(*second_pos as usize)]
 					.chars()
 					.enumerate()
 					.fold([' ', ' '], |[first_letter, second_letter], (i, c)| {
@@ -75,9 +75,9 @@ impl ChallengeT for Challenge {
 			.count()
 	}
 }
-fn parse_line(line: &str) -> (usize, usize, char, &str) {
-	let mut min: usize = 0;
-	let mut max: usize = 0;
+fn parse_line(line: &str) -> (u16, u16, char, &str) {
+	let mut min: u16 = 0;
+	let mut max: u16 = 0;
 	let mut letter = ' ';
 	let mut password = "";
 	line.split(&['-', ' '][..])

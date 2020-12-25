@@ -47,8 +47,8 @@ impl ChallengeT for Challenge {
 			.for_each(|(y, line)| {
 				line.bytes().enumerate().for_each(|(x, b)| {
 					if b == 35 {
-						active.insert(Vec3::<i32>::new(x as i32, y as i32, 0));
-						active_2.insert(Vec4::<i32>::new(x as i32, y as i32, 0, 0));
+						active.insert(Vec3::<i16>::new(x as i16, y as i16, 0));
+						active_2.insert(Vec4::<i16>::new(x as i16, y as i16, 0, 0));
 					}
 				});
 			});
@@ -58,6 +58,9 @@ impl ChallengeT for Challenge {
 
 		let mut next_active = HashSet::new();
 		let mut next_active_2 = HashSet::new();
+
+		let mut part_1_result = 0;
+		let mut part_2_result = 0;
 		for step in 0..6 {
 			next_active.clear();
 			next_active_2.clear();
@@ -68,22 +71,47 @@ impl ChallengeT for Challenge {
 					for z in 0..(step + 2) {
 						let coord = Vec3::new(x, y, z);
 						let active_count = count_active_adjacent(&active, &coord);
-						match (active.get(&coord), active_count) {
-							(Some(_), 2) | (Some(_), 3) | (None, 3) => {
+						match (active.contains(&coord), active_count) {
+							(true, 2) | (_, 3) => {
+								if step == 5 {
+									if z == 0 {
+										part_1_result += 1;
+									} else {
+										part_1_result += 2;
+									}
+								}
 								next_active.insert(coord);
-								next_active.insert(Vec3::new(x, y, -z));
+								if z != 0 {
+									next_active.insert(Vec3::new(x, y, -z));
+								}
 							}
 							_ => (),
 						}
 						for w in 0..(step + 2) {
 							let coord = Vec4::new(x, y, z, w);
 							let active_count = count_active_adjacent(&active_2, &coord);
-							match (active_2.get(&coord), active_count) {
-								(Some(_), 2) | (Some(_), 3) | (None, 3) => {
-									next_active_2.insert(coord);
-									next_active_2.insert(Vec4::new(x, y, z, -w));
-									next_active_2.insert(Vec4::new(x, y, -z, w));
-									next_active_2.insert(Vec4::new(x, y, -z, -w));
+							match (active_2.contains(&coord), active_count) {
+								(true, 2) | (_, 3) => {
+									if step == 5 {
+										if z == 0 && w == 0 {
+											part_2_result += 1;
+										} else if z != 0 && w != 0 {
+											part_2_result += 4;
+										} else {
+											part_2_result += 2;
+										}
+									} else {
+										next_active_2.insert(coord);
+										if w != 0 {
+											next_active_2.insert(Vec4::new(x, y, z, -w));
+										}
+										if z != 0 {
+											next_active_2.insert(Vec4::new(x, y, -z, w));
+										}
+										if z != 0 && w != 0 {
+											next_active_2.insert(Vec4::new(x, y, -z, -w));
+										}
+									}
 								}
 								_ => (),
 							}
@@ -95,8 +123,8 @@ impl ChallengeT for Challenge {
 			std::mem::swap(&mut active_2, &mut next_active_2);
 		}
 		Self {
-			part_1_result: active.iter().count(),
-			part_2_result: active_2.iter().count(),
+			part_1_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -110,13 +138,16 @@ fn count_active_adjacent<T>(active: &HashSet<T>, coord: &T) -> usize
 where
 	T: NeighborsT + std::cmp::Eq + std::hash::Hash + Copy,
 {
-	coord
-		.neighbors()
-		.iter()
-		.fold(0, |count, coord| match active.get(&coord) {
-			Some(_) => count + 1,
-			None => count,
-		})
+	let mut count = 0;
+	for neighbor in coord.neighbors().iter() {
+		if active.contains(&neighbor) {
+			count += 1;
+			if count > 3 {
+				break;
+			}
+		}
+	}
+	count
 }
 
 #[cfg(test)]

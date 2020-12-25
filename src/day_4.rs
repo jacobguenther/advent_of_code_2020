@@ -26,12 +26,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::common::ChallengeT;
 
 pub struct Challenge {
-	part_1_result: usize,
-	part_2_result: usize,
+	part_1_result: u16,
+	part_2_result: u16,
 }
 impl ChallengeT for Challenge {
-	type Output1 = usize;
-	type Output2 = usize;
+	type Output1 = u16;
+	type Output2 = u16;
 
 	fn day() -> u8 {
 		4
@@ -40,7 +40,7 @@ impl ChallengeT for Challenge {
 		let [part_1_result, part_2_result] = include_str!("../inputs/day_4.txt")
 			.split("\n\n")
 			.map(|with_whitespaces| with_whitespaces.replace(char::is_whitespace, ":"))
-			.fold([0, 0], |acc: [usize; 2], passport_string| {
+			.fold([0, 0], |acc: [u16; 2], passport_string| {
 				let key_value = passport_string.split(':').collect::<Vec<&str>>();
 				let [passport_data_1, passport_data_2] =
 					key_value.iter().zip(&key_value[1..]).fold(
@@ -53,8 +53,8 @@ impl ChallengeT for Challenge {
 						},
 					);
 				[
-					acc[0] + passport_data_1.is_valid() as usize,
-					acc[1] + passport_data_2.is_valid() as usize,
+					acc[0] + passport_data_1.is_valid() as u16,
+					acc[1] + passport_data_2.is_valid() as u16,
 				]
 			});
 
@@ -108,7 +108,7 @@ fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> P
 		"hgt" => {
 			new.height = {
 				let len = value.len();
-				match value[..(len - 2)].parse::<usize>() {
+				match value[..(len - 2)].parse::<u16>() {
 					Ok(n) => match &value[(len - 2)..] {
 						"cm" => 149 < n && n < 194,
 						"in" => 58 < n && n < 77,

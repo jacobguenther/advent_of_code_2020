@@ -41,10 +41,10 @@ impl ChallengeT for Challenge {
 	fn new() -> Self {
 		let mut mask_0s = 0;
 		let mut mask_1s = 0;
-		let part_1 = include_str!("../inputs/day_14.txt")
+		let part_1_result = include_str!("../inputs/day_14.txt")
 			.lines()
 			.filter_map(|line| {
-				if line.starts_with("mask") {
+				if line.starts_with("ma") {
 					mask_0s = 0;
 					mask_1s = 0;
 					for c in line.split("mask = ").nth(1).unwrap().chars() {
@@ -77,50 +77,55 @@ impl ChallengeT for Challenge {
 			.map(|(_, v)| *v)
 			.sum();
 
-		let mut mask = Vec::new();
-		let mut memory = HashMap::<u64, u64>::new();
+		let mut mask_1s = 0;
+		let mut mask_floating = 0;
 		let mut floating_bits_count = 0;
+		let mut memory = HashMap::<u64, u64>::new();
 		// Note: '0' is 48 and '1' is 49
 		include_str!("../inputs/day_14.txt")
 			.lines()
 			.for_each(|line| {
-				if line.starts_with("mask") {
+				if line.starts_with("ma") {
+					mask_1s = 0;
+					mask_floating = 0;
 					floating_bits_count = 0;
-					mask = line
-						.split("mask = ")
+					line.split("mask = ")
 						.nth(1)
 						.unwrap()
 						.as_bytes()
 						.iter()
-						.map(|b| match b {
-							48 => 0,
-							49 => 1,
-							_ => {
-								floating_bits_count += 1;
-								2
+						.for_each(|b| {
+							mask_1s <<= 1;
+							mask_floating <<= 1;
+							match b {
+								48 => (),
+								49 => mask_1s += 1,
+								_ => {
+									mask_floating += 1;
+									floating_bits_count += 1;
+								}
 							}
-						})
-						.collect::<Vec<u8>>();
+						});
 				} else {
 					let base_address = line
 						.split(|c| c == '[' || c == ']')
 						.nth(1)
 						.unwrap()
 						.parse::<u64>()
-						.unwrap();
+						.unwrap() | mask_1s;
 
 					let value = line.split("= ").nth(1).unwrap().parse::<u64>().unwrap();
 					let mut addresses = Vec::with_capacity(1 << floating_bits_count);
-					build_addresses(&mask, base_address, 0, &mut addresses);
+					build_addresses(mask_floating, base_address, 0, &mut addresses);
 					addresses.iter().for_each(|address| {
 						memory.insert(*address, value);
 					});
 				}
 			});
-		let part_2 = memory.iter().map(|(_, v)| *v).sum();
+		let part_2_result = memory.iter().map(|(_, v)| *v).sum();
 		Self {
-			part_1_result: part_1,
-			part_2_result: part_2,
+			part_1_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -130,27 +135,25 @@ impl ChallengeT for Challenge {
 		self.part_2_result
 	}
 }
-fn build_addresses(mask: &[u8], address: u64, current: u64, addresses: &mut Vec<u64>) {
-	if let Some(mask_value) = mask.last() {
-		let address_bit = (address >> current) % 2;
-		let a = match (mask_value, address_bit) {
-			(1, 0) => address + (1 << current),
-			(2, 0) => {
-				let a = address + (1 << current);
-				build_addresses(&mask[0..(mask.len() - 1)], a, current + 1, addresses);
-				address
-			}
-			(2, 1) => {
-				let a = address - (1 << current);
-				build_addresses(&mask[0..(mask.len() - 1)], a, current + 1, addresses);
-				address
-			}
-			_ => address,
-		};
-		build_addresses(&mask[0..(mask.len() - 1)], a, current + 1, addresses);
-	} else {
+fn build_addresses(mask: u64, address: u64, current: u64, addresses: &mut Vec<u64>) {
+	if current == 64 {
 		addresses.push(address);
+		return;
 	}
+	let mask_bit = (mask >> current) & 1;
+	let address_bit = (address >> current) & 1;
+	match (mask_bit, address_bit) {
+		(1, 0) => {
+			let a = address + (1 << current);
+			build_addresses(mask, a, current + 1, addresses);
+		}
+		(1, 1) => {
+			let a = address - (1 << current);
+			build_addresses(mask, a, current + 1, addresses);
+		}
+		_ => (),
+	};
+	build_addresses(mask, address, current + 1, addresses)
 }
 
 #[cfg(test)]

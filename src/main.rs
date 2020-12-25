@@ -42,7 +42,9 @@ pub mod day_15;
 pub mod day_16;
 pub mod day_17;
 pub mod day_18;
+pub mod day_19;
 pub mod day_2;
+pub mod day_23;
 pub mod day_3;
 pub mod day_4;
 pub mod day_5;
@@ -77,6 +79,8 @@ pub fn main() {
 				"16" => bench(&day_16::Challenge::print_result),
 				"17" => bench(&day_17::Challenge::print_result),
 				"18" => bench(&day_18::Challenge::print_result),
+				"19" => bench(&day_19::Challenge::print_result),
+				"23" => bench(&day_23::Challenge::print_result),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -95,6 +99,25 @@ fn bench(day: &dyn Fn()) {
 fn all() {
 	let now = Instant::now();
 
+	let handle_15 = std::thread::spawn(|| {
+		day_15::Challenge::print_result();
+	});
+	let handle_17 = std::thread::spawn(|| {
+		day_17::Challenge::print_result();
+	});
+	let handle_7_14 = std::thread::spawn(|| {
+		day_7::Challenge::print_result();
+		day_8::Challenge::print_result();
+		day_9::Challenge::print_result();
+		day_10::Challenge::print_result();
+		day_11::Challenge::print_result();
+		day_12::Challenge::print_result();
+		day_13::Challenge::print_result();
+		day_14::Challenge::print_result();
+	});
+	let handle_23 = std::thread::spawn(|| {
+		day_23::Challenge::print_result();
+	});
 	day_1::Challenge::print_result();
 	day_2::Challenge::print_result();
 	day_3::Challenge::print_result();
@@ -102,18 +125,13 @@ fn all() {
 	day_4::Challenge::print_result();
 	day_5::Challenge::print_result();
 	day_6::Challenge::print_result();
-	day_7::Challenge::print_result();
-	day_8::Challenge::print_result();
-	day_9::Challenge::print_result();
-	day_10::Challenge::print_result();
-	day_11::Challenge::print_result();
-	day_12::Challenge::print_result();
-	day_13::Challenge::print_result();
-	day_14::Challenge::print_result();
-	day_15::Challenge::print_result();
+	handle_7_14.join().unwrap();
+	handle_15.join().unwrap();
 	day_16::Challenge::print_result();
-	day_17::Challenge::print_result();
+	handle_17.join().unwrap();
 	day_18::Challenge::print_result();
+	day_19::Challenge::print_result();
+	handle_23.join().unwrap();
 
 	let elapsed = now.elapsed();
 	println!(
@@ -121,15 +139,4 @@ fn all() {
 		elapsed.as_millis(),
 		elapsed.as_nanos()
 	);
-}
-
-#[cfg(test)]
-mod tests {
-	use super::all;
-	use test::Bencher;
-
-	#[bench]
-	fn bench_all(b: &mut Bencher) {
-		b.iter(all)
-	}
 }

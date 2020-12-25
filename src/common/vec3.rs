@@ -36,8 +36,8 @@ impl<T> Vec3<T> {
 		Self { x, y, z }
 	}
 }
-impl NeighborsT for Vec3<i32> {
-	fn neighbors(&self) -> Vec<Vec3<i32>> {
+impl NeighborsT for Vec3<i16> {
+	fn neighbors(&self) -> Vec<Vec3<i16>> {
 		let mut neighbors = Vec::with_capacity(26);
 		for z in self.z - 1..self.z + 2 {
 			for x in self.x - 1..self.x + 2 {

@@ -55,22 +55,16 @@ impl ChallengeT for Challenge {
 		let mut final_acc = 0;
 		let mut modified_instructions = instructions.clone();
 		for (i, (inst, number)) in instructions.iter().enumerate() {
-			if *inst == InstructionType::Jmp || *inst == InstructionType::Nop {
-				match inst {
-					InstructionType::Nop => {
-						modified_instructions[i] = (InstructionType::Jmp, *number)
-					}
-					InstructionType::Jmp => {
-						modified_instructions[i] = (InstructionType::Nop, *number)
-					}
-					_ => (),
-				};
-				if let Ok(result) = run_instructions(&modified_instructions) {
-					final_acc = result;
-					break;
-				}
-				modified_instructions[i] = (*inst, *number);
+			match inst {
+				InstructionType::Nop => modified_instructions[i] = (InstructionType::Jmp, *number),
+				InstructionType::Jmp => modified_instructions[i] = (InstructionType::Nop, *number),
+				_ => continue,
+			};
+			if let Ok(result) = run_instructions(&modified_instructions) {
+				final_acc = result;
+				break;
 			}
+			modified_instructions[i] = (*inst, *number);
 		}
 		Self {
 			part_1_answer: broken_acc.unwrap_err(),

@@ -60,7 +60,7 @@ impl ChallengeT for Challenge {
 		Self { parsed_input }
 	}
 	fn part_1(&self) -> Self::Output1 {
-		let mut previous = Vec::new();
+		let mut previous = Vec::with_capacity(self.parsed_input.len());
 		let mut current = self.parsed_input.clone();
 		while previous != current {
 			previous = current;
@@ -69,7 +69,7 @@ impl ChallengeT for Challenge {
 		count_seats(&current)
 	}
 	fn part_2(&self) -> Self::Output2 {
-		let mut previous = Vec::new();
+		let mut previous = Vec::with_capacity(self.parsed_input.len());
 		let mut current = self.parsed_input.clone();
 		while previous != current {
 			previous = current;
@@ -101,27 +101,30 @@ fn p1_adjacency(current: &[MapRow], current_tile: &Tile, new: &mut [MapRow], x: 
 		let pos_y = (*dy + y as i32) as usize;
 		if pos_x < width && pos_y < height {
 			if let Tile::Filled = current[pos_y][pos_x] {
-				acc += 1
+				acc += 1;
 			}
 		}
 		acc
 	});
 	if adjacent_filled == 0 && *current_tile == Tile::Empty {
 		new[y][x] = Tile::Filled;
-	} else if adjacent_filled >= 4 && *current_tile == Tile::Filled {
+	} else if adjacent_filled > 3 && *current_tile == Tile::Filled {
 		new[y][x] = Tile::Empty;
 	}
 }
 fn p2_adjacency(current: &[MapRow], current_tile: &Tile, new: &mut [MapRow], x: usize, y: usize) {
 	let mut visible_filled_seats = 0;
+	let height = current.len() as i32;
+	let width = current[0].len() as i32;
 	for (dx, dy) in steps() {
-		let (mut px, mut py) = (x as i32, y as i32);
+		let (mut pos_x, mut pos_y) = (x as i32, y as i32);
 		loop {
-			px += dx;
-			py += dy;
-			if current.get(py as usize).is_some() && current[py as usize].get(px as usize).is_some()
-			{
-				match current[py as usize][px as usize] {
+			pos_x += dx;
+			pos_y += dy;
+			if pos_x < 0 || pos_y < 0 || pos_x >= width || pos_y >= height {
+				break;
+			} else {
+				match current[pos_y as usize][pos_x as usize] {
 					Tile::Filled => {
 						visible_filled_seats += 1;
 						break;
@@ -129,18 +132,16 @@ fn p2_adjacency(current: &[MapRow], current_tile: &Tile, new: &mut [MapRow], x: 
 					Tile::Empty => break,
 					_ => (),
 				}
-			} else {
-				break;
 			}
 		}
 	}
 	if visible_filled_seats == 0 && *current_tile == Tile::Empty {
 		new[y][x] = Tile::Filled;
-	} else if visible_filled_seats >= 5 && *current_tile == Tile::Filled {
+	} else if visible_filled_seats > 4 && *current_tile == Tile::Filled {
 		new[y][x] = Tile::Empty;
 	}
 }
-fn steps() -> &'static [(i32, i32); 8] {
+const fn steps() -> &'static [(i32, i32); 8] {
 	&[
 		(-1, -1),
 		(-1, 0),
@@ -153,15 +154,16 @@ fn steps() -> &'static [(i32, i32); 8] {
 	]
 }
 fn count_seats(current: &[MapRow]) -> usize {
-	let mut total_filled = 0;
-	for row in current.iter() {
-		for tile in row {
-			if let Tile::Filled = tile {
-				total_filled += 1;
-			}
-		}
-	}
-	total_filled
+	current.iter().fold(0, |filled, row| {
+		filled
+			+ row.iter().fold(0, |part, tile| {
+				if let Tile::Filled = tile {
+					part + 1
+				} else {
+					part
+				}
+			})
+	})
 }
 
 #[cfg(test)]

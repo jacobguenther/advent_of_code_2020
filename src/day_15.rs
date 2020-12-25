@@ -25,39 +25,46 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use super::common::ChallengeT;
 
-use std::collections::HashMap;
-
-// number, turn last spoken, turn spoken before last
-type NumbersSpoken = HashMap<u32, (u32, Option<u32>)>;
-
 pub struct Challenge {
-	part_1_result: u32,
-	part_2_result: u32,
+	part_1_result: i32,
+	part_2_result: i32,
 }
 impl ChallengeT for Challenge {
-	type Output1 = u32;
-	type Output2 = u32;
+	type Output1 = i32;
+	type Output2 = i32;
 
 	fn day() -> u8 {
 		15
 	}
 	fn new() -> Self {
 		let starting_numbers = [0, 6, 1, 7, 2, 19, 20];
-		let mut numbers_spoken = starting_numbers
-			.iter()
-			.enumerate()
-			.map(|(i, n)| (*n, (i as u32, None)))
-			.collect::<NumbersSpoken>();
+		// index is number, value is the turn it was spoken on
+		let mut turn_spoken_on = vec![-1; 30_000_000];
+		for (i, num) in starting_numbers.iter().enumerate() {
+			turn_spoken_on[*num as usize] = i as i32;
+		}
 
-		let part_1_result = van_eck_sequence(
-			&mut numbers_spoken,
-			*starting_numbers.last().unwrap(),
-			starting_numbers.len() as u32,
-			2020,
-		);
+		let mut previous_spoken = *starting_numbers.last().unwrap() as usize;
+		let mut part_1_result = 0;
+		let mut part_2_result = 0;
+
+		let start = starting_numbers.len() as i32;
+		for current_turn in start..30_000_000 {
+			let spoken = match turn_spoken_on[previous_spoken] {
+				-1 => 0,
+				last_spoken_on => current_turn - last_spoken_on - 1,
+			};
+			turn_spoken_on[previous_spoken] = current_turn - 1;
+			if current_turn == 2020 - 1 {
+				part_1_result = spoken;
+			} else if current_turn == 30_000_000 - 1 {
+				part_2_result = spoken;
+			}
+			previous_spoken = spoken as usize;
+		}
 		Self {
 			part_1_result,
-			part_2_result: van_eck_sequence(&mut numbers_spoken, part_1_result, 2020, 30_000_000),
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
@@ -67,6 +74,13 @@ impl ChallengeT for Challenge {
 		self.part_2_result
 	}
 }
+
+/*
+use std::collections::HashMap;
+
+// number, turn last spoken, turn spoken before last
+type NumbersSpoken = HashMap<u32, (u32, Option<u32>)>;
+
 fn van_eck_sequence(
 	numbers_spoken: &mut NumbersSpoken,
 	last_spoken: u32,
@@ -93,12 +107,13 @@ fn van_eck_sequence(
 	}
 	previous_spoken
 }
+*/
 
 #[cfg(test)]
 mod tests {
 	use super::Challenge;
 	use crate::common::ChallengeT;
-	use test::Bencher;
+	// use test::Bencher;
 
 	#[test]
 	fn part_1_test() {
@@ -107,14 +122,5 @@ mod tests {
 	#[test]
 	fn part_2_test() {
 		assert_eq!(Challenge::new().part_2(), 19331);
-	}
-
-	#[bench]
-	fn both(b: &mut Bencher) {
-		b.iter(|| {
-			let challenge = Challenge::new();
-			challenge.part_1();
-			challenge.part_2();
-		})
 	}
 }

@@ -120,8 +120,8 @@ impl ChallengeT for Challenge {
 		let width = self.notes.filtered_tickets[0].len();
 
 		let mut columns = vec![vec![0; height]; width];
-		for (y, col) in columns.iter_mut().enumerate() {
-			for (x, item) in col.iter_mut().enumerate() {
+		for (y, column) in columns.iter_mut().enumerate() {
+			for (x, item) in column.iter_mut().enumerate() {
 				*item = self.notes.filtered_tickets[x][y];
 			}
 		}
@@ -145,16 +145,11 @@ impl ChallengeT for Challenge {
 			.collect::<Vec<_>>();
 
 		let col_names = find_order(&matches, 0, &Vec::new()).unwrap();
-		col_names.iter().zip(self.notes.my_ticket.iter()).fold(
-			1,
-			|product, (col_name, ticket_val)| {
-				if col_name.starts_with("departure") {
-					product * *ticket_val
-				} else {
-					product
-				}
-			},
-		)
+		col_names
+			.iter()
+			.zip(self.notes.my_ticket.iter())
+			.filter(|(col_name, _)| col_name.starts_with("de"))
+			.fold(1, |product, (_, ticket_val)| product * *ticket_val)
 	}
 }
 
@@ -177,15 +172,16 @@ fn find_order(
 	if current == matches.len() {
 		return Some(partial.to_owned());
 	}
+	let mut param = partial.to_owned();
 	for option in matches[current].iter() {
 		if partial.contains(option) {
 			continue;
 		}
-		let mut param = partial.to_owned();
 		param.push(option);
 		if let Some(result) = find_order(matches, current + 1, &param) {
 			return Some(result);
 		}
+		param.pop();
 	}
 	None
 }

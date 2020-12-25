@@ -73,26 +73,24 @@ impl ChallengeT for Challenge {
 		self.part_1_answer
 	}
 	fn part_2(&self) -> Self::Output2 {
-		let mut smallest = 0;
-		let mut largest = 0;
-		let mut found_range = false;
-		for start in 0..self.nums.len() - 1 {
+		for start in 0..(self.nums.len() - 1) {
+			let mut sum = self.nums[start];
+			let mut smallest = sum;
+			let mut largest = sum;
 			for end in (start + 1)..self.nums.len() {
-				let sum: usize = self.nums[start..end + 1].iter().sum();
+				let n = self.nums[end];
+				sum += n;
+				if n < smallest {
+					smallest = n;
+				} else if n > largest {
+					largest = n;
+				}
 				if sum == self.part_1_answer {
-					let mut sum_range = self.nums[start..end + 1].iter().collect::<Vec<_>>();
-					sum_range.sort();
-					smallest = *sum_range[0];
-					largest = **sum_range.last().unwrap();
-					found_range = true;
-					break;
+					return smallest + largest;
 				}
 			}
-			if found_range {
-				break;
-			}
 		}
-		smallest + largest
+		0
 	}
 }
 
@@ -108,7 +106,7 @@ mod tests {
 	}
 	#[test]
 	fn part_2_test() {
-		assert_eq!(Challenge::new().part_2(), 2174232);
+		assert_eq!(Challenge::new().part_2(), 2_174_232);
 	}
 
 	#[bench]

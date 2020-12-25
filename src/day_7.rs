@@ -28,11 +28,11 @@ use std::collections::HashMap;
 use super::common::ChallengeT;
 
 pub struct Challenge {
-	parsed_input: HashMap<&'static str, Vec<(&'static str, usize)>>,
+	parsed_input: HashMap<&'static str, Vec<(&'static str, u32)>>,
 }
 impl ChallengeT for Challenge {
-	type Output1 = usize;
-	type Output2 = usize;
+	type Output1 = u32;
+	type Output2 = u32;
 
 	fn day() -> u8 {
 		7
@@ -41,7 +41,7 @@ impl ChallengeT for Challenge {
 		let parsed_input = include_str!("../inputs/day_7.txt")
 			.lines()
 			.map(|line| parse_line(line))
-			.collect::<HashMap<&str, Vec<(&str, usize)>>>();
+			.collect::<HashMap<&str, Vec<(&str, u32)>>>();
 
 		Self { parsed_input }
 	}
@@ -60,7 +60,7 @@ impl ChallengeT for Challenge {
 	}
 }
 
-fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
+fn parse_line(line: &str) -> (&str, Vec<(&str, u32)>) {
 	let mut iter = line.split(" bags ");
 	let color = iter.next().unwrap();
 	let rest = iter.next().unwrap();
@@ -76,7 +76,7 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 					break;
 				}
 			}
-			let bag_count = rule[..(numbers_digits)].parse::<usize>().unwrap();
+			let bag_count = rule[..(numbers_digits)].parse::<u32>().unwrap();
 
 			let rule_color = if rule.ends_with('.') {
 				rule[(numbers_digits + 1)..(rule.len() - 5)] // remove " bags." and " bag."
@@ -94,7 +94,7 @@ fn parse_line(line: &str) -> (&str, Vec<(&str, usize)>) {
 
 fn contains_gold(
 	current: &str,
-	bags: &HashMap<&'static str, Vec<(&'static str, usize)>>,
+	bags: &HashMap<&'static str, Vec<(&'static str, u32)>>,
 	cache: &mut HashMap<&str, bool>,
 ) -> bool {
 	if let Some(val) = cache.get(current) {
@@ -118,7 +118,7 @@ fn contains_gold(
 		false
 	}
 }
-fn count_bags_in(current: &str, bags: &HashMap<&str, Vec<(&str, usize)>>) -> usize {
+fn count_bags_in(current: &str, bags: &HashMap<&str, Vec<(&str, u32)>>) -> u32 {
 	let mut count = 0;
 	for (bag_color, bags_in_bag) in bags.get(current).unwrap() {
 		count += bags_in_bag + bags_in_bag * count_bags_in(&bag_color, bags);
