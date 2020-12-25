@@ -11,3 +11,6 @@ keywords = ["aoc", "advent of code", "challenge", "devember"]
 
 [dependencies]
 chinese_remainder = { path = "src/chinese_remainder_theorem" }
+
+[profile.release]
+opt-level = 3
