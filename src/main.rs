@@ -197,7 +197,7 @@ fn all_threaded() {
 	let (time_b, res_b) = b_handle.join().unwrap();
 	let (time_c, res_c) = c_handle.join().unwrap();
 	let (time_d, res_d) = d_handle.join().unwrap();
-	println!("{}\n{}\n{}\n{}", res_a, res_b, res_c, res_d);
+	println!("{}{}{}{}", res_a, res_b, res_c, res_d);
 	if true {
 		println!(
 			"th1: {}\nth2: {}\nth3: {}\nth4: {}",
