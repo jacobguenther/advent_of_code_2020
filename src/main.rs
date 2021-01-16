@@ -138,56 +138,70 @@ fn all() {
 
 	let elapsed = now.elapsed();
 	println!(
-		"Estemated Time: {}ms or {}ns",
+		"Estemated Time: {}ms or {}us",
 		elapsed.as_millis(),
-		elapsed.as_nanos()
+		elapsed.as_micros()
 	);
 }
 fn all_threaded() {
-	let now = Instant::now();
+	let result_fns = [
+		day_1::Challenge::result_string,
+		day_2::Challenge::result_string,
+		day_3::Challenge::result_string,
+		day_4::Challenge::result_string,
+		day_5::Challenge::result_string,
+		day_6::Challenge::result_string,
+		day_7::Challenge::result_string,
+		day_8::Challenge::result_string,
+		day_9::Challenge::result_string,
+		day_10::Challenge::result_string,
+		day_11::Challenge::result_string,
+		day_12::Challenge::result_string,
+		day_13::Challenge::result_string,
+		day_14::Challenge::result_string,
+		day_15::Challenge::result_string,
+		day_16::Challenge::result_string,
+		day_17::Challenge::result_string,
+		day_18::Challenge::result_string,
+		day_19::Challenge::result_string,
+		day_20::Challenge::result_string,
+		day_21::Challenge::result_string,
+		day_22::Challenge::result_string,
+		day_23::Challenge::result_string,
+		day_24::Challenge::result_string,
+		day_25::Challenge::result_string,
+	];
+	let do_part = |result_fns: &[fn() -> String]| {
+		let now = Instant::now();
 
-	let handle_15 = std::thread::spawn(|| {
-		day_15::Challenge::print_result();
-	});
-	let handle_17 = std::thread::spawn(|| {
-		day_17::Challenge::print_result();
-	});
-	let handle_7_14 = std::thread::spawn(|| {
-		day_7::Challenge::print_result();
-		day_8::Challenge::print_result();
-		day_9::Challenge::print_result();
-		day_10::Challenge::print_result();
-		day_11::Challenge::print_result();
-		day_12::Challenge::print_result();
-		day_13::Challenge::print_result();
-		day_14::Challenge::print_result();
-	});
-	let handle_23 = std::thread::spawn(|| {
-		day_23::Challenge::print_result();
-	});
-	day_1::Challenge::print_result();
-	day_2::Challenge::print_result();
-	day_3::Challenge::print_result();
-	day_4::Challenge::print_result();
-	day_5::Challenge::print_result();
-	day_6::Challenge::print_result();
-	handle_7_14.join().unwrap();
-	handle_15.join().unwrap();
-	day_16::Challenge::print_result();
-	handle_17.join().unwrap();
-	day_18::Challenge::print_result();
-	day_19::Challenge::print_result();
-	day_20::Challenge::print_result();
-	day_21::Challenge::print_result();
-	day_22::Challenge::print_result();
-	handle_23.join().unwrap();
-	day_24::Challenge::print_result();
-	day_25::Challenge::print_result();
-
-	let elapsed = now.elapsed();
-	println!(
-		"Estemated Time: {}ms or {}ns",
-		elapsed.as_millis(),
-		elapsed.as_nanos()
-	);
+		let mut res = String::new();
+		for f in result_fns.iter() {
+			res.push_str(&f());
+			res.push('\n');
+		}
+		let elapsed = now.elapsed();
+		(
+			format!(
+				"Estemated Time: {}ms or {}us",
+				elapsed.as_millis(),
+				elapsed.as_micros()
+			),
+			res,
+		)
+	};
+	let a_handle = std::thread::spawn(move || do_part(&result_fns[0..15]));
+	let b_handle = std::thread::spawn(move || do_part(&result_fns[15..21]));
+	let c_handle = std::thread::spawn(move || do_part(&result_fns[21..22]));
+	let d_handle = std::thread::spawn(move || do_part(&result_fns[22..25]));
+	let (time_a, res_a) = a_handle.join().unwrap();
+	let (time_b, res_b) = b_handle.join().unwrap();
+	let (time_c, res_c) = c_handle.join().unwrap();
+	let (time_d, res_d) = d_handle.join().unwrap();
+	println!("{}\n{}\n{}\n{}", res_a, res_b, res_c, res_d);
+	if true {
+		println!(
+			"th1: {}\nth2: {}\nth3: {}\nth4: {}",
+			time_a, time_b, time_c, time_d
+		);
+	}
 }

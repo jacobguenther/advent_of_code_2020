@@ -39,10 +39,9 @@ impl ChallengeT for Challenge {
 		3
 	}
 	fn new() -> Self {
-		// Note: '#' is 35
 		let tree_map = include_str!("../inputs/day_3.txt")
 			.lines()
-			.map(|line| line.bytes().map(|b| b == 35).collect())
+			.map(|line| line.bytes().map(|b| b == b'#').collect())
 			.collect::<Vec<_>>();
 		Self {
 			part_1_result: count_trees_hit(&tree_map, 3, 1),

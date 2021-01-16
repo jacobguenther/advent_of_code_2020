@@ -75,40 +75,6 @@ impl ChallengeT for Challenge {
 	}
 }
 
-/*
-use std::collections::HashMap;
-
-// number, turn last spoken, turn spoken before last
-type NumbersSpoken = HashMap<u32, (u32, Option<u32>)>;
-
-fn van_eck_sequence(
-	numbers_spoken: &mut NumbersSpoken,
-	last_spoken: u32,
-	start: u32,
-	nth: u32,
-) -> u32 {
-	let mut previous_spoken = last_spoken;
-	let mut previous_spoken_index = start;
-	let mut previous_spoken_before = None;
-
-	for current_i in start..nth {
-		let current_spoken = match previous_spoken_before {
-			Some(turn) => previous_spoken_index - turn,
-			None => 0,
-		};
-		let current_last_spoken_on = match numbers_spoken.get(&current_spoken) {
-			Some((t, _)) => Some(*t),
-			None => None,
-		};
-		numbers_spoken.insert(current_spoken, (current_i, current_last_spoken_on));
-		previous_spoken = current_spoken;
-		previous_spoken_index = current_i;
-		previous_spoken_before = current_last_spoken_on;
-	}
-	previous_spoken
-}
-*/
-
 #[cfg(test)]
 mod tests {
 	use super::Challenge;

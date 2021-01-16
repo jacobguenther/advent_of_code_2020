@@ -39,7 +39,7 @@ impl ChallengeT for Challenge {
 		6
 	}
 	fn new() -> Self {
-		let [p1, p2] = include_str!("../inputs/day_6.txt")
+		let [part_1_answer, part_2_answer] = include_str!("../inputs/day_6.txt")
 			.split("\n\n")
 			.map(|group| {
 				// part 1
@@ -74,8 +74,8 @@ impl ChallengeT for Challenge {
 			});
 
 		Self {
-			part_1_answer: p1,
-			part_2_answer: p2,
+			part_1_answer,
+			part_2_answer,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {

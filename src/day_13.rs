@@ -41,7 +41,7 @@ impl ChallengeT for Challenge {
 			.lines()
 			.collect::<Vec<&str>>();
 
-		let ealiest_departure = lines[0].parse::<usize>().unwrap();
+		let earliest_departure = lines[0].parse::<usize>().unwrap();
 		let buses = lines[1]
 			.split(',')
 			.enumerate()
@@ -56,7 +56,7 @@ impl ChallengeT for Challenge {
 		let mut best_bus = 0;
 		buses.iter().for_each(|(_, b)| {
 			let mut dep = *b;
-			dep = (ealiest_departure as f64 / dep as f64).ceil() as usize * dep;
+			dep = (earliest_departure as f64 / dep as f64).ceil() as usize * dep;
 			if dep < lowest {
 				lowest = dep;
 				best_bus = *b;
@@ -85,7 +85,7 @@ impl ChallengeT for Challenge {
 		}
 
 		Self {
-			part_1_result: best_bus * (lowest - ealiest_departure),
+			part_1_result: best_bus * (lowest - earliest_departure),
 			part_2_result,
 		}
 	}

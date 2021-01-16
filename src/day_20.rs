@@ -418,8 +418,8 @@ impl TryFrom<u8> for Pixel {
 	type Error = ();
 	fn try_from(byte: u8) -> Result<Self, Self::Error> {
 		match byte {
-			35 => Ok(Pixel::Black), // #
-			46 => Ok(Pixel::White), // .
+			b'#' => Ok(Pixel::Black),
+			b'.' => Ok(Pixel::White),
 			_ => Err(()),
 		}
 	}

@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 use super::common::ChallengeT;
 
 pub struct Challenge {
-	parsed_lines: Vec<(u16, u16, char, &'static str)>,
+	parsed_lines: Vec<(u16, u16, u8, &'static str)>,
 }
 impl ChallengeT for Challenge {
 	type Output1 = usize;
@@ -46,7 +46,7 @@ impl ChallengeT for Challenge {
 			.iter()
 			.filter(|(min, max, letter, password)| {
 				let count = password
-					.chars()
+					.bytes()
 					.fold(0, |acc, c| if c == *letter { acc + 1 } else { acc });
 				count >= *min && count <= *max
 			})
@@ -58,9 +58,9 @@ impl ChallengeT for Challenge {
 			.filter(|(first_pos, second_pos, letter, password)| {
 				let (first_i, second_i) = ((first_pos - 1) as usize, (second_pos - 1) as usize);
 				let [first_letter, second_letter] = password[0..(*second_pos as usize)]
-					.chars()
+					.bytes()
 					.enumerate()
-					.fold([' ', ' '], |[first_letter, second_letter], (i, c)| {
+					.fold([b' ', b' '], |[first_letter, second_letter], (i, c)| {
 						if i == first_i {
 							[c, second_letter]
 						} else if i == second_i {
@@ -75,17 +75,17 @@ impl ChallengeT for Challenge {
 			.count()
 	}
 }
-fn parse_line(line: &str) -> (u16, u16, char, &str) {
+fn parse_line(line: &str) -> (u16, u16, u8, &str) {
 	let mut min: u16 = 0;
 	let mut max: u16 = 0;
-	let mut letter = ' ';
+	let mut letter = b' ';
 	let mut password = "";
 	line.split(&['-', ' '][..])
 		.enumerate()
 		.for_each(|(i, s)| match i {
 			0 => min = s.parse().unwrap(),
 			1 => max = s.parse().unwrap(),
-			2 => letter = s.chars().next().unwrap(),
+			2 => letter = s.bytes().next().unwrap(),
 			3 => password = s,
 			_ => (),
 		});

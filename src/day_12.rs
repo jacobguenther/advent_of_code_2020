@@ -42,14 +42,14 @@ impl ChallengeT for Challenge {
 			.lines()
 			.map(|line| {
 				let distance = line[1..].parse().unwrap();
-				match &line[0..1] {
-					"N" => Direction::North(distance),
-					"S" => Direction::South(distance),
-					"E" => Direction::East(distance),
-					"W" => Direction::West(distance),
-					"L" => Direction::Left(distance),
-					"R" => Direction::Right(distance),
-					"F" => Direction::Forward(distance),
+				match &line.bytes().next().unwrap() {
+					b'N' => Direction::North(distance),
+					b'S' => Direction::South(distance),
+					b'E' => Direction::East(distance),
+					b'W' => Direction::West(distance),
+					b'L' => Direction::Left(distance),
+					b'R' => Direction::Right(distance),
+					b'F' => Direction::Forward(distance),
 					_ => panic!("Error while parsing input"),
 				}
 			})

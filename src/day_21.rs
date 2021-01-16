@@ -97,7 +97,7 @@ impl ChallengeT for Challenge {
 			.map(|(allergen, ingredients)| (*allergen, *ingredients.iter().next().unwrap()))
 			.collect::<Vec<(&str, &str)>>();
 		ingredient_allergen_pairs.sort_unstable();
-		
+
 		let part_2_result = ingredient_allergen_pairs.iter().fold(
 			String::new(),
 			|mut canonical, (_, ingredient)| {

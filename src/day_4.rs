@@ -118,10 +118,9 @@ fn to_passport_data_2(passport_data: &PassportData, key: &str, value: &str) -> P
 				}
 			}
 		}
-		// Note: '#' is 35
 		"hcl" => {
 			new.hair_color = {
-				if value.len() != 7 || value.bytes().next().unwrap() != 35 {
+				if value.len() != 7 || value.bytes().next().unwrap() != b'#' {
 					false
 				} else {
 					u32::from_str_radix(&value[1..], 16).is_ok()

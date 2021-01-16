@@ -72,12 +72,11 @@ impl ChallengeT for Challenge {
 	}
 }
 
-// Note: 'B' is 66 and 'R' is 82
 fn get_id(line: &str) -> usize {
 	line.bytes().fold(0, |acc, b| {
 		acc * 2
 			+ match b {
-				c if c == 66 || c == 82 => 1,
+				c if c == b'B' || c == b'R' => 1,
 				_ => 0,
 			}
 	})

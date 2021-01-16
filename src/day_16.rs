@@ -149,7 +149,7 @@ impl ChallengeT for Challenge {
 			.iter()
 			.zip(self.notes.my_ticket.iter())
 			.filter(|(col_name, _)| col_name.starts_with("de"))
-			.fold(1, |product, (_, ticket_val)| product * *ticket_val)
+			.fold(1, |product, (_, &ticket_val)| product * ticket_val)
 	}
 }
 

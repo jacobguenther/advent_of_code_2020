@@ -39,7 +39,7 @@ impl ChallengeT for Challenge {
 		let input = include_str!("../inputs/day_1.txt");
 		let mut report = input
 			.lines()
-			.map(|l| l.parse().unwrap())
+			.map(|line| line.parse().unwrap())
 			.collect::<Vec<u32>>();
 		report.sort_unstable();
 		Self { report }

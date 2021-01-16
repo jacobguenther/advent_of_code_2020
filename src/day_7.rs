@@ -102,7 +102,7 @@ fn contains_gold(
 	}
 
 	let current_info = bags.get(current).unwrap();
-	let current_contains_gold = current_info.iter().any(|el| el.0 == "shiny gold");
+	let current_contains_gold = current_info.iter().any(|(name, _)| *name == "shiny gold");
 
 	if current_contains_gold {
 		true

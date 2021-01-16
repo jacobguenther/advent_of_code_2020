@@ -27,6 +27,10 @@ use super::common::*;
 use std::collections::HashSet;
 use std::collections::VecDeque;
 
+use std::collections::hash_map::DefaultHasher;
+use std::hash::Hash;
+use std::hash::Hasher;
+
 pub struct Challenge {
 	part_1_result: usize,
 	part_2_result: usize,
@@ -89,12 +93,16 @@ fn combat(player_1_deck: &mut VecDeque<u8>, player_2_deck: &mut VecDeque<u8>) {
 	}
 }
 fn recursive_combat(player_1_deck: &mut VecDeque<u8>, player_2_deck: &mut VecDeque<u8>) -> bool {
-	let mut previous_rounds = HashSet::<(VecDeque<u8>, VecDeque<u8>)>::new();
+	let mut previous_rounds = HashSet::new();
 	while !player_1_deck.is_empty() && !player_2_deck.is_empty() {
-		if previous_rounds.contains(&(player_1_deck.clone(), player_2_deck.clone())) {
+		let mut hasher = DefaultHasher::new();
+		player_1_deck.hash(&mut hasher);
+		player_2_deck.hash(&mut hasher);
+		let hash = hasher.finish();
+		if previous_rounds.contains(&hash) {
 			return true;
 		}
-		previous_rounds.insert((player_1_deck.clone(), player_2_deck.clone()));
+		previous_rounds.insert(hash);
 
 		let player_1_card = player_1_deck.pop_front().unwrap();
 		let player_2_card = player_2_deck.pop_front().unwrap();
