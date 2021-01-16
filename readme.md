@@ -13,11 +13,16 @@ Make sure you have cargo and rustc installed. This project uses nightly features
 ## Viewing the Answers
 I recommend using the "--release" flag as day 15 can take over a minute on some hardware without it.
 
-`cargo run --release day_<number>`
+`cargo run --release <day_number>`
 
 To view the answers for all the challenges so far enter.
 
 `cargo run --release`
+
+or
+
+`cargo run --release threaded`
+
 
 ## Running tests
 `cargo test --release day_<number>`
