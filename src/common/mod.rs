@@ -23,6 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+pub mod chinese_remainder_theorem;
 pub mod grid;
 pub mod vec2;
 pub mod vec3;
@@ -62,4 +63,21 @@ where
 	Self: Sized,
 {
 	fn neighbors(&self) -> Vec<Self>;
+}
+
+// greatest common divisor
+// https://en.wikipedia.org/wiki/Euclidean_algorithm
+pub fn gcd(a: usize, b: usize) -> Option<usize> {
+	match (a, b) {
+		(0, 0) => None,
+		(0, _) => Some(b),
+		(_, 0) => Some(a),
+		_ => gcd(b, a % b),
+	}
+}
+
+// least common multiple
+// https://en.wikipedia.org/wiki/Least_common_multiple
+pub fn lcm(a: usize, b: usize) -> Option<usize> {
+	Some(a * b / gcd(a, b)?)
 }

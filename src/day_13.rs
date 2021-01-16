@@ -23,9 +23,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-use super::common::ChallengeT;
-
-use chinese_remainder::chinese_remainder_theorem;
+use super::common::{chinese_remainder_theorem::chinese_remainder_theorem, ChallengeT};
 
 pub struct Challenge {
 	part_1_result: usize,

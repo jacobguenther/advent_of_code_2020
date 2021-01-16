@@ -84,7 +84,7 @@ impl ChallengeT for Challenge {
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		self.part_1_result.clone()
+		self.part_1_result
 	}
 	fn part_2(&self) -> Self::Output2 {
 		self.part_2_result

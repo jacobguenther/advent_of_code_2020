@@ -50,7 +50,7 @@ impl ChallengeT for Challenge {
 						acc
 					},
 				);
-				group_answers.sort();
+				group_answers.sort_unstable();
 				group_answers.dedup();
 				let group_answers_count = group_answers.len();
 

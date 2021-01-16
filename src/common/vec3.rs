@@ -31,9 +31,24 @@ pub struct Vec3<T> {
 	pub y: T,
 	pub z: T,
 }
-impl<T> Vec3<T> {
+impl<T> Vec3<T>
+where
+	T: std::ops::AddAssign + Copy,
+{
 	pub fn new(x: T, y: T, z: T) -> Self {
 		Self { x, y, z }
+	}
+	pub fn add_other(&mut self, other: &Self) -> &mut Self {
+		self.x += other.x;
+		self.y += other.y;
+		self.z += other.z;
+		self
+	}
+	pub fn add(&mut self, x: T, y: T, z: T) -> &mut Self {
+		self.x += x;
+		self.y += y;
+		self.z += z;
+		self
 	}
 }
 impl NeighborsT for Vec3<i16> {

@@ -41,7 +41,7 @@ impl ChallengeT for Challenge {
 			.lines()
 			.map(|line| line.parse().unwrap())
 			.collect::<Vec<usize>>();
-		adapters.sort();
+		adapters.sort_unstable();
 
 		Self { adapters }
 	}

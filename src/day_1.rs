@@ -41,7 +41,7 @@ impl ChallengeT for Challenge {
 			.lines()
 			.map(|l| l.parse().unwrap())
 			.collect::<Vec<u32>>();
-		report.sort();
+		report.sort_unstable();
 		Self { report }
 	}
 	fn part_1(&self) -> Self::Output1 {

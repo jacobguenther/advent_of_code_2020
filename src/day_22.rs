@@ -59,7 +59,7 @@ impl ChallengeT for Challenge {
 		self.part_1_result
 	}
 	fn part_2(&self) -> Self::Output2 {
-		self.part_2_result.clone()
+		self.part_2_result
 	}
 }
 
@@ -128,7 +128,7 @@ fn recursive_combat(player_1_deck: &mut VecDeque<u8>, player_2_deck: &mut VecDeq
 	!player_1_deck.is_empty()
 }
 fn calculate_winners_score(player_1_deck: &VecDeque<u8>, player_2_deck: &VecDeque<u8>) -> usize {
-	let winning_deck = if player_1_deck.len() > 0 {
+	let winning_deck = if !player_1_deck.is_empty() {
 		player_1_deck
 	} else {
 		player_2_deck

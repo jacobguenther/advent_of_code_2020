@@ -48,12 +48,12 @@ impl ChallengeT for Challenge {
 		let part_2_result = solve_2(&tiles, &adjacency_list);
 
 		Self {
-			part_1_result: part_1_result,
-			part_2_result: part_2_result,
+			part_1_result,
+			part_2_result,
 		}
 	}
 	fn part_1(&self) -> Self::Output1 {
-		self.part_1_result.clone()
+		self.part_1_result
 	}
 	fn part_2(&self) -> Self::Output2 {
 		self.part_2_result
@@ -105,7 +105,7 @@ fn parse_input(input: &str) -> Vec<Tile> {
 	tiles.sort();
 	tiles
 }
-fn build_adjacency_list(tiles: &Vec<Tile>) -> HashMap<u32, Vec<u32>> {
+fn build_adjacency_list(tiles: &[Tile]) -> HashMap<u32, Vec<u32>> {
 	tiles
 		.iter()
 		.map(|tile| {
@@ -141,16 +141,13 @@ fn solve_1(adjacency_list: &HashMap<u32, Vec<u32>>) -> usize {
 	product
 }
 
-fn solve_2(tiles: &Vec<Tile>, adjacency_list: &HashMap<u32, Vec<u32>>) -> usize {
+fn solve_2(tiles: &[Tile], adjacency_list: &HashMap<u32, Vec<u32>>) -> usize {
 	let mut start = tiles[0].clone();
 	for (id, adjacent_ids) in adjacency_list.iter() {
 		let i = tiles.binary_search_by(|t| t.id.cmp(&id)).unwrap();
-		match adjacent_ids.len() {
-			2 => {
-				start = tiles[i].clone();
-				break;
-			}
-			_ => (),
+		if 2 == adjacent_ids.len() {
+			start = tiles[i].clone();
+			break;
 		}
 	}
 

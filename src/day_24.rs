@@ -65,10 +65,10 @@ impl ChallengeT for Challenge {
 }
 
 fn parse_input(input: &str) -> Vec<Vec<HexDirection>> {
-	let e = b'e';
-	let s = b's';
-	let w = b'w';
-	let n = b'n';
+	let east = b'e';
+	let south = b's';
+	let west = b'w';
+	let north = b'n';
 	input
 		.lines()
 		.map(|line| {
@@ -77,27 +77,27 @@ fn parse_input(input: &str) -> Vec<Vec<HexDirection>> {
 			let mut i = 0;
 			while i < line.len() {
 				let direction = match bytes[i] {
-					b1 if b1 == e => {
+					b1 if b1 == east => {
 						i += 1;
 						HexDirection::East
 					}
-					b1 if b1 == s => {
+					b1 if b1 == south => {
 						i += 2;
 						match bytes[i - 1] {
-							b2 if b2 == e => HexDirection::SouthEast,
-							b2 if b2 == w => HexDirection::SouthWest,
+							b2 if b2 == east => HexDirection::SouthEast,
+							b2 if b2 == west => HexDirection::SouthWest,
 							b2 => panic!("{}{} not a supported direction", b1 as char, b2 as char),
 						}
 					}
-					b1 if b1 == w => {
+					b1 if b1 == west => {
 						i += 1;
 						HexDirection::West
 					}
-					b1 if b1 == n => {
+					b1 if b1 == north => {
 						i += 2;
 						match bytes[i - 1] {
-							b if b == w => HexDirection::NorthWest,
-							b if b == e => HexDirection::NorthEast,
+							b2 if b2 == west => HexDirection::NorthWest,
+							b2 if b2 == east => HexDirection::NorthEast,
 							b2 => panic!("{}{} not a supported direction", b1 as char, b2 as char),
 						}
 					}

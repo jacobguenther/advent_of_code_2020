@@ -44,7 +44,12 @@ pub mod day_17;
 pub mod day_18;
 pub mod day_19;
 pub mod day_2;
+pub mod day_20;
+pub mod day_21;
+pub mod day_22;
 pub mod day_23;
+pub mod day_24;
+pub mod day_25;
 pub mod day_3;
 pub mod day_4;
 pub mod day_5;
@@ -81,7 +86,12 @@ pub fn main() {
 				"17" => bench(&day_17::Challenge::print_result),
 				"18" => bench(&day_18::Challenge::print_result),
 				"19" => bench(&day_19::Challenge::print_result),
+				"20" => bench(&day_20::Challenge::print_result),
+				"21" => bench(&day_21::Challenge::print_result),
+				"22" => bench(&day_22::Challenge::print_result),
 				"23" => bench(&day_23::Challenge::print_result),
+				"24" => bench(&day_24::Challenge::print_result),
+				"25" => bench(&day_25::Challenge::print_result),
 				_ => println!("ERROR: UNKNOWN ARGUMENT"),
 			}
 		}
@@ -119,7 +129,12 @@ fn all() {
 	day_17::Challenge::print_result();
 	day_18::Challenge::print_result();
 	day_19::Challenge::print_result();
+	day_20::Challenge::print_result();
+	day_21::Challenge::print_result();
+	day_22::Challenge::print_result();
 	day_23::Challenge::print_result();
+	day_24::Challenge::print_result();
+	day_25::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(
@@ -162,7 +177,12 @@ fn all_threaded() {
 	handle_17.join().unwrap();
 	day_18::Challenge::print_result();
 	day_19::Challenge::print_result();
+	day_20::Challenge::print_result();
+	day_21::Challenge::print_result();
+	day_22::Challenge::print_result();
 	handle_23.join().unwrap();
+	day_24::Challenge::print_result();
+	day_25::Challenge::print_result();
 
 	let elapsed = now.elapsed();
 	println!(
